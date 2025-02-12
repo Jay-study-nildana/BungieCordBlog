@@ -1,19 +1,6 @@
-# Bungie Cord Blog - Version 0.0.3
+# Bungie Cord Blog - Angular Web App
 
-Blogging idea project that shows a web api (.NET) and front end (Angular
-
-TODO: documentation is [available here](putdoclinkhereaftersettingupgithubpages)
-
-## Inspired by
-
-1. Udemy Course, https://www.udemy.com/course/real-world-app-angular-aspnet-core-web-api-and-sql/
-1. https://github.com/sameer8saini/CodePulse.UI
-1. https://github.com/sameer8saini/CodePulse.API 
-
-## Projects
-
-1. [BungieCordBlogWebAPI](BungieCordBlogWebAPI)
-1. [BungieCordBlogAngular](BungieCordBlogAngular)
+This is the front end project, angular web app.
 
 # book a session with me
 
