@@ -2,6 +2,20 @@
 
 This is the front end project, angular web app.
 
+## how to run
+
+1. npm install
+1. npm run start or ng serve
+
+## Using the web app
+
+1. Web API must be running first.
+1. Login on the web app.
+    1. Default admin user is 'admin@BungieCordBlog.com' and Password is 'Password@6969'
+    1. Create a Category
+    1. Then, proceed to create blog posts
+    1. Blog Posts become visible on the home page
+
 # book a session with me
 
 1. [calendly](https://calendly.com/jaycodingtutor/30min)
