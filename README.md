@@ -1,8 +1,10 @@
-# Bungie Cord Blog - Version 0.0.3
+# Bungie Cord Blog - Version 0.0.4
 
 Blogging idea project that shows a web api (.NET) and front end (Angular
 
 TODO: documentation is [available here](putdoclinkhereaftersettingupgithubpages)
+
+GitHub Project board is [available here](https://github.com/users/Jay-study-nildana/projects/10)
 
 ## Inspired by
 
