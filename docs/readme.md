@@ -26,6 +26,7 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
     1. Then, proceed to create blog posts
     1. Blog Posts become visible on the home page
 1. TODO : Add Register to the web app
+2. Detailed instructions on how to the run web api in VS Code (Mac or Windows) are [availble here](https://github.com/Jay-study-nildana/BungieCordBlog/tree/main/BungieCordBlogWebAPI)
 
 ## User Account Registration
 
