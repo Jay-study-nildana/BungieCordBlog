@@ -1,4 +1,4 @@
-# Bungie Cord Blog - Version 0.0.4
+# Bungie Cord Blog - Version 0.0.5
 
 Welcome ot the bungie cord blog documentation.
 
