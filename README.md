@@ -2,7 +2,7 @@
 
 Blogging idea project that shows a web api (.NET) and front end (Angular
 
-TODO: documentation is [available here](putdoclinkhereaftersettingupgithubpages)
+TODO: documentation is [available here](https://jay-study-nildana.github.io/BungieCordBlog/)
 
 GitHub Project board is [available here](https://github.com/users/Jay-study-nildana/projects/10)
 
