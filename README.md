@@ -1,4 +1,4 @@
-# Bungie Cord Blog - Version 0.0.4
+# Bungie Cord Blog - Version 0.0.5
 
 Blogging idea project that shows a web api (.NET) and front end (Angular
 
