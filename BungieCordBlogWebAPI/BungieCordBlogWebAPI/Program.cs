@@ -19,12 +19,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBConnectionString"));
 });
 
 builder.Services.AddDbContext<AuthDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDBConnectionString"));
 });
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

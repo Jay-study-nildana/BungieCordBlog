@@ -10,6 +10,7 @@ import { HomeComponent } from './features/public/home/home.component';
 import { BlogDetailsComponent } from './features/public/blog-details/blog-details.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard } from './features/auth/guards/auth.guard';
+import { AboutUsComponent } from './features/public/about-us/about-us.component';
 
 const routes: Routes = [
   {
@@ -53,7 +54,8 @@ const routes: Routes = [
     path: 'admin/blogposts/:id',
     component: EditBlogpostComponent,
     canActivate: [authGuard]
-  }
+  },
+  { path: 'about', component: AboutUsComponent }
 ];
 
 @NgModule({
