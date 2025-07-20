@@ -10,6 +10,7 @@ This is the front end project, angular web app.
 ## Using the web app
 
 1. Web API must be running first.
+1. make sure, apiBaseUrl, is matching your backend API.
 1. Login on the web app.
     1. Default admin user is 'admin@BungieCordBlog.com' and Password is 'Password@6969'
     1. Create a Category

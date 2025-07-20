@@ -1,4 +1,4 @@
-# Bungie Cord Blog - Version 0.0.5
+# Bungie Cord Blog - Version 0.0.6
 
 Welcome ot the bungie cord blog documentation.
 
@@ -10,16 +10,17 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
 
 1. Run the Web API Project in Visual Studio (as you would run any other dot net project).
     1. Update 'ConnectionString'
-    1. Run 'Update-Database'
-    1. Update-Database -Context ApplicationDbContext
-    1. Update-Database -Context AuthDbContext
+    1. 'Add-Migration MigrationOne -Context AuthDbContext'
+    1. 'Add-Migration MigrationTwo -Context ApplicationDbContext'
+    1. 'Update-Database -Context ApplicationDbContext'
+    1. 'Update-Database -Context AuthDbContext'
     1. Update 'Key' with a 256 bit secret string
 1. Run the Angular Project (as you would run any other angular project)
     1. npm install
     1. ng serve or npm run start
 1. Connecting the Back End to Front End
     1. API URI of the web api must match with the 'apiBaseUrl' in the front end app
-1. Register user via Swagger/Postman
+1. Register user via Swagger/Postman (or use the default account given below)
 1. Login on the web app.
     1. Default admin user is 'admin@BungieCordBlog.com' and Password is 'Password@6969'
     1. Create a Category
