@@ -43,15 +43,32 @@ namespace BungieCordBlogWebAPI.Controllers
         }
 
 
+        //to bypass the Swagger issue where Swagger will not work when we use multiple [FromForm] tags. 
+        public class ImageUploadRequest
+        {
+            [FromForm]
+            public IFormFile File { get; set; }
+            [FromForm]
+            public string FileName { get; set; }
+            [FromForm]
+            public string Title { get; set; }
+        }
+
         // POST: {apibaseurl}/api/images
         [HttpPost]
         //public async Task<IActionResult> UploadImage([FromForm] IFormFile file,
         //    [FromForm] string fileName, [FromForm] string title)
         //I had to change this, because of this 
         //https://github.com/domaindrivendev/Swashbuckle.AspNetCore#handle-forms-and-file-uploads
-        public async Task<IActionResult> UploadImage(IFormFile file,
-            string fileName, string title)
+        //public async Task<IActionResult> UploadImage(IFormFile file,
+        //    string fileName, string title)
+        //{ //this was the original code, but, I had to change it to make it work with the react app
+        //the angular code was working but react does not seem to work.
+        public async Task<IActionResult> UploadImage([FromForm] ImageUploadRequest request)
         {
+            var file = request.File;
+            var fileName = request.FileName;
+            var title = request.Title;
             ValidateFileUpload(file);
 
             if (ModelState.IsValid)
