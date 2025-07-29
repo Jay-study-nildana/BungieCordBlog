@@ -1,4 +1,4 @@
-# Bungie Cord Blog - Version 0.0.6
+# Bungie Cord Blog - Version 0.0.7
 
 Welcome ot the bungie cord blog documentation.
 
@@ -18,6 +18,9 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
 1. Run the Angular Project (as you would run any other angular project)
     1. npm install
     1. ng serve or npm run start
+1. Run the React Project (as you would run any other angular project)
+    1. npm install
+    1. npm run dev    
 1. Connecting the Back End to Front End
     1. API URI of the web api must match with the 'apiBaseUrl' in the front end app
 1. Register user via Swagger/Postman (or use the default account given below)
@@ -26,8 +29,11 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
     1. Create a Category
     1. Then, proceed to create blog posts
     1. Blog Posts become visible on the home page
-1. TODO : Add Register to the web app
 2. Detailed instructions on how to the run web api in VS Code (Mac or Windows) are [availble here](https://github.com/Jay-study-nildana/BungieCordBlog/tree/main/BungieCordBlogWebAPI)
+1. TODO 
+    1. Add Register to the Angular web app
+    1. Add Edit functionality to the web app
+    1. Add Delete functionality to the web app
 
 ## User Account Registration
 
