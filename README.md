@@ -1,4 +1,4 @@
-# Bungie Cord Blog - Version 0.0.6
+# Bungie Cord Blog - Version 0.0.7
 
 Blogging idea project that shows a web api (.NET) and front end (Angular)
 
@@ -16,6 +16,7 @@ GitHub Project board is [available here](https://github.com/users/Jay-study-nild
 
 1. [BungieCordBlogWebAPI](BungieCordBlogWebAPI)
 1. [BungieCordBlogAngular](BungieCordBlogAngular)
+1. [BungieReactApp](BungieReactApp)
 
 # book a session with me
 

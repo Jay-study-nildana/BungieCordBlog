@@ -47,6 +47,7 @@ export default function Home() {
         <strong>Tip:</strong> Use the navigation bar above to explore different pages and features!
         <br />
         <a href="/bungie-cord" className="btn btn-outline-primary mt-2">Explore Bungie Cord API</a>
+        <a href="/read-blog" className="btn btn-outline-success mt-2 ms-2">Read Blog</a>
       </div>
     </div>
   );

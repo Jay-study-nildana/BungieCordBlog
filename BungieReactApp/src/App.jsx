@@ -13,6 +13,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import BungieCord from './pages/BungieCord';
 import ImageThings from './pages/ImageThings';
 import SeeAllImages from './pages/SeeAllImages';
+import Categories from './pages/Categories';
+import BlogPosts from './pages/BlogPosts';
+import ReadBlog from './pages/ReadBlog';
 
 export default function App() {
   return (
@@ -29,6 +32,9 @@ export default function App() {
           <Route path="/bungie-cord" element={<BungieCord />} />
           <Route path="/image-things" element={<ImageThings />} />
           <Route path="/see-all-images" element={<SeeAllImages />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/blog-posts" element={<BlogPosts />} />
+          <Route path="/read-blog" element={<ReadBlog />} />
         </Routes>
         <Footer />
       </Router>

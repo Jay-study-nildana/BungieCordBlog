@@ -66,6 +66,12 @@ export default function BungieCord() {
       <Link to="/image-things" className="btn btn-outline-secondary">
         Go to Image Things
       </Link>
+      <Link to="/categories" className="btn btn-outline-info">
+        Go to Categories
+      </Link>
+      <Link to="/blog-posts" className="btn btn-outline-warning">
+          Go to BlogPosts
+      </Link>
     </div>
   );
 }
