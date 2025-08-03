@@ -17,6 +17,7 @@ GitHub Project board is [available here](https://github.com/users/Jay-study-nild
 1. [BungieCordBlogWebAPI](BungieCordBlogWebAPI)
 1. [BungieCordBlogAngular](BungieCordBlogAngular)
 1. [BungieReactApp](BungieReactApp)
+1. [BungieHelloWorldAPI](BungieHelloWorldAPI)
 
 # book a session with me
 
