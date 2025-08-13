@@ -3,12 +3,14 @@ import { CanActivateFn, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
 import jwt_decode from 'jwt-decode';
+import { NotificationService } from '../services/auth.NotificationService';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const cookieService = inject(CookieService);
   const authService = inject(AuthService);
   const router = inject(Router);
   const user = authService.getUser();
+  const notificationService = inject(NotificationService);
 
   // Check for the JWT Token
   let token = cookieService.get('Authorization');
@@ -31,7 +33,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (user.roles.includes('Writer')) {
         return true;
       } else {
-        alert('Unauthorized');
+        notificationService.show('Unauthorized');
         return false;
       }
     }

@@ -33,9 +33,6 @@ export default function AppNavbar() {
             <Nav.Link href="/about" className="text-white">
               About
             </Nav.Link>
-            <Nav.Link href="/contact" className="text-white">
-              Contact
-            </Nav.Link>
             <Nav.Link href="/bungie-cord" className="text-white">
               Bungie Cord
             </Nav.Link>
