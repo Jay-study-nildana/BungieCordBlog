@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="col-12 col-md-8 col-lg-6 mx-auto">
+    <h1>Images</h1>
+
+    <!-- Toggle Button for Add Image Form -->
+    <button class="btn btn-outline-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#addImageForm" aria-expanded="false" aria-controls="addImageForm">
+      Add Image
+    </button>
+
+    <!-- Collapsible Add Image Form -->
+    <div class="collapse" id="addImageForm">
+      <form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="file" class="form-label">Select Image</label>
+          <input type="file" class="form-control" id="file" (change)="onFileChange($event)" accept="image/*" required>
+        </div>
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" [(ngModel)]="title" name="title" required>
+        </div>
+        <div class="mb-3">
+          <label for="fileName" class="form-label">File Name</label>
+          <input type="text" class="form-control" id="fileName" [(ngModel)]="fileName" name="fileName" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Image</button>
+      </form>
+
+      <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+    </div>
+
+    <!-- Images Grid -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <h2>All Images</h2>
+      </div>
+      <div class="col-md-4 mb-4" *ngFor="let img of images">
+        <div class="card">
+          <img [src]="img.url" class="card-img-top" [alt]="img.title">
+          <div class="card-body">
+            <h5 class="card-title">{{ img.title }}</h5>
+            <p class="card-text">{{ img.fileName }}</p>
+            <small class="text-muted">{{ img.dateCreated | date:'medium' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

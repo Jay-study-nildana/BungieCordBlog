@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Registration() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [notification, setNotification] = useState(null);
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -15,18 +18,24 @@ export default function Registration() {
       });
 
       if (response.ok) {
-        alert("Registration successful!");
+        setNotification({ type: 'success', message: 'Registration successful! Redirecting to login...' });
+        setTimeout(() => {
+          setNotification(null);
+          navigate('/login');
+        }, 2000);
       } else {
         const errorData = await response.json();
-        alert("Registration failed: " + JSON.stringify(errorData));
+        setNotification({ type: 'danger', message: 'Registration failed: ' + JSON.stringify(errorData) });
+        setTimeout(() => setNotification(null), 3000);
       }
     } catch (error) {
-      console.error('Registration failed:', error);
+      setNotification({ type: 'danger', message: 'Registration failed: ' + error.message });
+      setTimeout(() => setNotification(null), 3000);
     }
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 position-relative">
       <h2>Registration Page</h2>
       <form onSubmit={handleRegister}>
         <div className="form-group">
@@ -57,6 +66,23 @@ export default function Registration() {
           Register
         </button>
       </form>
+      {notification && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 1050,
+            minWidth: '200px',
+            maxWidth: '90vw'
+          }}
+        >
+          <div className={`alert alert-${notification.type} py-2 px-3 mb-0 text-center shadow`} style={{ fontSize: '1em' }}>
+            {notification.message}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -32,7 +32,13 @@ export default function About() {
                   <strong>Education:</strong> B.E. in Computer Science
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/vijayasimhabr/" target="_blank" rel="noopener noreferrer">Vijayasimha BR</a>
+                  <strong>GitHub:</strong> <a href="https://github.com/Jay-study-nildana" target="_blank" rel="noopener noreferrer">Jay-study-nildana</a>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Website:</strong> <a href="https://stories.thechalakas.com/" target="_blank" rel="noopener noreferrer">stories.thechalakas.com</a>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Instagram:</strong> <a href="https://www.instagram.com/codingtutorjay" target="_blank" rel="noopener noreferrer">@codingtutorjay</a>
                 </ListGroup.Item>
               </ListGroup>
               <Card.Text>

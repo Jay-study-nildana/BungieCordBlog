@@ -11,6 +11,9 @@ import { BlogDetailsComponent } from './features/public/blog-details/blog-detail
 import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard } from './features/auth/guards/auth.guard';
 import { AboutUsComponent } from './features/public/about-us/about-us.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+import { ImagesComponent } from './features/images/images.component';
+import { UserProfileComponent } from './features/user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -21,6 +24,14 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent
   },
+  { 
+    path: 'register', 
+    component: RegisterComponent 
+  },
+  { 
+    path: 'profile', 
+    component: UserProfileComponent 
+  },
   {
     path: 'blog/:url',
     component: BlogDetailsComponent
@@ -28,7 +39,7 @@ const routes: Routes = [
   {
     path: 'admin/categories',
     component: CategoryListComponent,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   },
   {
     path: 'admin/categories/add',
@@ -43,7 +54,7 @@ const routes: Routes = [
   {
     path: 'admin/blogposts',
     component: BlogpostListComponent,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   },
   {
     path: 'admin/blogposts/add',
@@ -54,6 +65,10 @@ const routes: Routes = [
     path: 'admin/blogposts/:id',
     component: EditBlogpostComponent,
     canActivate: [authGuard]
+  },
+  { 
+    path: 'admin/images',
+    component: ImagesComponent
   },
   { path: 'about', component: AboutUsComponent }
 ];

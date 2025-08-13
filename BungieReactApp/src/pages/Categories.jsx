@@ -9,6 +9,16 @@ export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
+  const [editId, setEditId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editUrlHandle, setEditUrlHandle] = useState('');
+  const [editSubmitting, setEditSubmitting] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [editSuccess, setEditSuccess] = useState('');
+
+  const token = localStorage.getItem('authToken');
+  const roles = JSON.parse(localStorage.getItem('authRoles') || '[]');
+  const isWriter = roles.includes('Writer');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +47,6 @@ export default function Categories() {
       setResult(data);
       setName('');
       setUrlHandle('');
-      // Refresh categories after adding
       fetchCategories();
     } catch (err) {
       setError(err.message || 'An error occurred');
@@ -68,6 +77,58 @@ export default function Categories() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const handleEditClick = (cat) => {
+    setEditId(cat.id);
+    setEditName(cat.name);
+    setEditUrlHandle(cat.urlHandle);
+    setEditError('');
+    setEditSuccess('');
+  };
+
+  const handleEditCancel = () => {
+    setEditId(null);
+    setEditName('');
+    setEditUrlHandle('');
+    setEditError('');
+    setEditSuccess('');
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditError('');
+    setEditSuccess('');
+    if (!editName.trim() || !editUrlHandle.trim()) {
+      setEditError('Both fields are required.');
+      return;
+    }
+    setEditSubmitting(true);
+    try {
+      const response = await fetch(`https://localhost:7226/api/Categories/${editId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          accept: '*/*',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: editName.trim(), urlHandle: editUrlHandle.trim() }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update category');
+      }
+      const data = await response.json();
+      setEditSuccess('Category updated!');
+      setEditId(null);
+      setEditName('');
+      setEditUrlHandle('');
+      fetchCategories();
+    } catch (err) {
+      setEditError(err.message || 'An error occurred');
+    } finally {
+      setEditSubmitting(false);
+      setTimeout(() => setEditSuccess(''), 2000);
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -125,14 +186,74 @@ export default function Categories() {
                 <th>ID</th>
                 <th>Name</th>
                 <th>URL Handle</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {categories.map((cat) => (
                 <tr key={cat.id}>
                   <td>{cat.id}</td>
-                  <td>{cat.name}</td>
-                  <td>{cat.urlHandle}</td>
+                  <td>
+                    {editId === cat.id ? (
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        disabled={editSubmitting}
+                      />
+                    ) : (
+                      cat.name
+                    )}
+                  </td>
+                  <td>
+                    {editId === cat.id ? (
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={editUrlHandle}
+                        onChange={(e) => setEditUrlHandle(e.target.value)}
+                        disabled={editSubmitting}
+                      />
+                    ) : (
+                      cat.urlHandle
+                    )}
+                  </td>
+                  <td>
+                    {editId === cat.id ? (
+                      <>
+                        <button
+                          className="btn btn-success btn-sm me-2"
+                          onClick={handleEditSubmit}
+                          disabled={editSubmitting}
+                        >
+                          {editSubmitting ? 'Saving...' : 'Save'}
+                        </button>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={handleEditCancel}
+                          disabled={editSubmitting}
+                        >
+                          Cancel
+                        </button>
+                        {editError && (
+                          <div className="text-danger mt-1">{editError}</div>
+                        )}
+                        {editSuccess && (
+                          <div className="text-success mt-1">{editSuccess}</div>
+                        )}
+                      </>
+                    ) : (
+                      isWriter && (
+                        <button
+                          className="btn btn-outline-primary btn-sm"
+                          onClick={() => handleEditClick(cat)}
+                        >
+                          Edit
+                        </button>
+                      )
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

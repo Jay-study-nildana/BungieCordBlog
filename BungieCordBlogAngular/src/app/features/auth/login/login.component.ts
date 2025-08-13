@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
+
 export class LoginComponent {
 
   model: LoginRequest;
@@ -21,6 +23,8 @@ export class LoginComponent {
       password: ''
     };
   }
+
+  
 
   onFormSubmit(): void {
     this.authService.login(this.model)

@@ -1,26 +1,30 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { NavbarComponent } from './core/components/navbar/navbar.component';
-import { CategoryListComponent } from './features/category/category-list/category-list.component';
-import { AddCategoryComponent } from './features/category/add-category/add-category.component';
-import { FormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { EditCategoryComponent } from './features/category/edit-category/edit-category.component';
-import { BlogpostListComponent } from './features/blog-post/blogpost-list/blogpost-list.component';
-import { AddBlogpostComponent } from './features/blog-post/add-blogpost/add-blogpost.component';
-import { MarkdownModule } from 'ngx-markdown';
-import { EditBlogpostComponent } from './features/blog-post/edit-blogpost/edit-blogpost.component';
-import { ImageSelectorComponent } from './shared/components/image-selector/image-selector.component';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { NavbarComponent } from "./core/components/navbar/navbar.component";
+import { CategoryListComponent } from "./features/category/category-list/category-list.component";
+import { AddCategoryComponent } from "./features/category/add-category/add-category.component";
+import { FormsModule } from "@angular/forms";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { EditCategoryComponent } from "./features/category/edit-category/edit-category.component";
+import { BlogpostListComponent } from "./features/blog-post/blogpost-list/blogpost-list.component";
+import { AddBlogpostComponent } from "./features/blog-post/add-blogpost/add-blogpost.component";
+import { MarkdownModule } from "ngx-markdown";
+import { EditBlogpostComponent } from "./features/blog-post/edit-blogpost/edit-blogpost.component";
+import { ImageSelectorComponent } from "./shared/components/image-selector/image-selector.component";
 
-import { HomeComponent } from './features/public/home/home.component';
-import { BlogDetailsComponent } from './features/public/blog-details/blog-details.component';
-import { LoginComponent } from './features/auth/login/login.component';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { FooterComponent } from './shared/components/footer/footer.component';
-import { AboutUsComponent } from './features/public/about-us/about-us.component';
+import { HomeComponent } from "./features/public/home/home.component";
+import { BlogDetailsComponent } from "./features/public/blog-details/blog-details.component";
+import { LoginComponent } from "./features/auth/login/login.component";
+import { AuthInterceptor } from "./core/interceptors/auth.interceptor";
+import { FooterComponent } from "./shared/components/footer/footer.component";
+import { AboutUsComponent } from "./features/public/about-us/about-us.component";
+import { RegisterComponent } from "./features/auth/register/register.component";
+import { ImagesComponent } from "./features/images/images.component";
+import { UserProfileComponent } from "./features/user-profile/user-profile.component";
+import { NotificationComponent } from "./shared/NotificationComponent/NotificationComponent.component";
 
 @NgModule({
   declarations: [
@@ -38,21 +42,25 @@ import { AboutUsComponent } from './features/public/about-us/about-us.component'
     LoginComponent,
     FooterComponent,
     AboutUsComponent,
+    RegisterComponent,
+    ImagesComponent,
+    UserProfileComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

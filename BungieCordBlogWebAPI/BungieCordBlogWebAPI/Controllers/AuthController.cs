@@ -1,5 +1,8 @@
-﻿using BungieCordBlogWebAPI.Models.DTO;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using BungieCordBlogWebAPI.Models.DTO;
 using BungieCordBlogWebAPI.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +15,15 @@ namespace BungieCordBlogWebAPI.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly ITokenRepository tokenRepository;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public AuthController(UserManager<IdentityUser> userManager,
-            ITokenRepository tokenRepository)
+            ITokenRepository tokenRepository,
+            RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.tokenRepository = tokenRepository;
+            this.roleManager = roleManager;
         }
 
         // POST: {apibaseurl}/api/auth/login
@@ -104,6 +110,65 @@ namespace BungieCordBlogWebAPI.Controllers
             }
 
             return ValidationProblem(ModelState);
+        }
+
+        // GET: {apibaseurl}/api/auth/users
+        [HttpGet]
+        [Route("users")]
+        public IActionResult GetAllUsers()
+        {
+            var users = userManager.Users
+                .Select(u => new { u.Id, u.Email, u.UserName })
+                .ToList();
+
+            return Ok(users);
+        }
+
+        // GET: {apibaseurl}/api/auth/roles
+        [HttpGet]
+        [Route("roles")]
+        public IActionResult GetAllRoles()
+        {
+            var roles = roleManager.Roles
+                .Select(r => new { r.Id, r.Name })
+                .ToList();
+
+            return Ok(roles);
+        }
+
+        // GET: {apibaseurl}/api/auth/token-details
+        [HttpGet]
+        [Route("token-details")]
+        [Authorize]
+        public IActionResult GetTokenDetails()
+        {
+            // Get the raw token from the Authorization header
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                return BadRequest("No JWT token found in Authorization header.");
+
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            // Group claims by type, allowing multiple values per type
+            var claims = jwtToken.Claims
+                .GroupBy(c => c.Type)
+                .ToDictionary(g => g.Key, g => g.Select(c => c.Value).ToList());
+
+            var tokenDetails = new
+            {
+                User = claims.TryGetValue(ClaimTypes.Name, out var name) ? name.FirstOrDefault() : null,
+                Email = claims.TryGetValue(ClaimTypes.Email, out var email) ? email.FirstOrDefault() : null,
+                Roles = claims.TryGetValue(ClaimTypes.Role, out var roles) ? roles : new List<string>(),
+                Issuer = jwtToken.Issuer,
+                Audience = jwtToken.Audiences.ToList(),
+                Expiry = jwtToken.ValidTo,
+                Claims = claims
+            };
+
+            return Ok(tokenDetails);
         }
 
     }

@@ -1,4 +1,4 @@
-# Bungie Cord Blog - Version 0.0.7
+# Bungie Cord Blog
 
 Welcome ot the bungie cord blog documentation.
 
@@ -9,12 +9,13 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
 ## How to Run 
 
 1. Run the Web API Project in Visual Studio (as you would run any other dot net project).
-    1. Update 'ConnectionString'
-    1. 'Add-Migration MigrationOne -Context AuthDbContext'
-    1. 'Add-Migration MigrationTwo -Context ApplicationDbContext'
-    1. 'Update-Database -Context ApplicationDbContext'
-    1. 'Update-Database -Context AuthDbContext'
-    1. Update 'Key' with a 256 bit secret string
+    1. Update 'ConnectionString' in appsettings.json for both ApplicationDbContext and AuthDbContext
+    1. Run the following commands in the Package Manager Console.
+        1. 'Add-Migration MigrationOne -Context AuthDbContext'
+        1. 'Add-Migration MigrationTwo -Context ApplicationDbContext'
+        1. 'Update-Database -Context ApplicationDbContext'
+        1. 'Update-Database -Context AuthDbContext'
+    1. Update 'Key' with a 256 bit secret string (or use the key that is already in the code)
 1. Run the Angular Project (as you would run any other angular project)
     1. npm install
     1. ng serve or npm run start
@@ -22,7 +23,7 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
     1. npm install
     1. npm run dev    
 1. Connecting the Back End to Front End
-    1. API URI of the web api must match with the 'apiBaseUrl' in the front end app
+    1. API URI of the web api must match with the 'apiBaseUrl' in the front end app (this is already done, but, still double check)
 1. Register user via Swagger/Postman (or use the default account given below)
 1. Login on the web app.
     1. Default admin user is 'admin@BungieCordBlog.com' and Password is 'Password@6969'
@@ -30,19 +31,6 @@ Repo is [available here](https://github.com/Jay-study-nildana/BungieCordBlog)
     1. Then, proceed to create blog posts
     1. Blog Posts become visible on the home page
 2. Detailed instructions on how to the run web api in VS Code (Mac or Windows) are [availble here](https://github.com/Jay-study-nildana/BungieCordBlog/tree/main/BungieCordBlogWebAPI)
-1. TODO 
-    1. Add Register to the Angular web app
-    1. Add Edit functionality to the web app
-    1. Add Delete functionality to the web app
-
-## User Account Registration
-
-```
-{
-  "email": "batman@one.com",
-  "password": "Password$321"
-}
-```
 
 # book a session with me
 
