@@ -1,6 +1,6 @@
-// App\src\components\Navbar.jsx
 import React, { useContext } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function AppNavbar() {
@@ -14,7 +14,7 @@ export default function AppNavbar() {
   return (
     <Navbar expand="lg" className="custom-navbar shadow-sm" variant="dark">
       <Container>
-        <Navbar.Brand href="/" className="fw-bold text-white">
+        <Navbar.Brand as={Link} to="/" className="fw-bold text-white">
           <img
             src="/vite.svg"
             alt="Logo"
@@ -27,28 +27,28 @@ export default function AppNavbar() {
         <Navbar.Toggle aria-controls="main-navbar-nav" />
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/" className="text-white">
+            <Nav.Link as={Link} to="/" className="text-white">
               Home
             </Nav.Link>
-            <Nav.Link href="/about" className="text-white">
+            <Nav.Link as={Link} to="/about" className="text-white">
               About
             </Nav.Link>
-            <Nav.Link href="/bungie-cord" className="text-white">
+            <Nav.Link as={Link} to="/bungie-cord" className="text-white">
               Bungie Cord
             </Nav.Link>
             {!isLoggedIn && (
               <>
-                <Nav.Link href="/registration" className="text-white">
+                <Nav.Link as={Link} to="/registration" className="text-white">
                   Registration
                 </Nav.Link>
-                <Nav.Link href="/login" className="text-white">
+                <Nav.Link as={Link} to="/login" className="text-white">
                   Login
                 </Nav.Link>
               </>
             )}
             {isLoggedIn && (
               <>
-                <Nav.Link href="/user-profile" className="text-white">
+                <Nav.Link as={Link} to="/user-profile" className="text-white">
                   User Profile
                 </Nav.Link>
                 <Nav.Link
