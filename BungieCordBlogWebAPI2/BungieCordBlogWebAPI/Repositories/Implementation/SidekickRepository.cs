@@ -51,4 +51,12 @@ public class SidekickRepository : ISidekickRepository
         await dbContext.SaveChangesAsync();
         return existing;
     }
+
+    public async Task<IEnumerable<Sidekick>> GetBySuperHeroIdAsync(Guid superHeroId)
+    {
+        return await dbContext.Sidekicks
+            .Where(sk => sk.SuperHeroId == superHeroId)
+            .ToListAsync();
+    }
+
 }

@@ -22,27 +22,19 @@
               <td>{{ hero.alias }}</td>
               <td>{{ hero.age }}</td>
               <td>{{ hero.origin }}</td>
-              <td>{{ hero.firstAppearance | date:'short' }}</td>
+              <td>{{ hero.firstAppearance | date:'yyyy-MM-dd' }}</td>
               <td>{{ hero.isActive ? 'Yes' : 'No' }}</td>
               <td>
+                <button class="btn btn-info btn-sm" (click)="toggleDetails(hero.id ?? '')">
+                  {{ detailsHeroId === hero.id ? 'Hide Details' : 'Show Details' }}
+                </button>
                 <button class="btn btn-primary btn-sm" (click)="selectHero(hero)">Edit</button>
-                <button 
-                  class="btn btn-danger btn-sm ms-2" 
-                  [disabled]="!hero.id"
-                  (click)="hero.id && deleteHero(hero.id)">
-                  Delete
-                </button>
-                <button 
-                  class="btn btn-info btn-sm ms-2"
-                  [disabled]="!hero.id"
-                  (click)="hero.id && toggleDetails(hero.id)">
-                  {{ detailsHeroId === hero.id ? 'Hide Details' : 'View Details' }}
-                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteHero(hero.id ?? '')">Delete</button>
               </td>
             </tr>
             <tr *ngIf="detailsHeroId === hero.id">
               <td colspan="7">
-                <div *ngIf="loadingDetails" class="text-center py-3">
+                <div *ngIf="loadingDetails" class="text-center">
                   <span class="spinner-border spinner-border-sm"></span> Loading details...
                 </div>
                 <div *ngIf="detailsHero && !loadingDetails">
@@ -61,6 +53,20 @@
                       <strong>{{ power.powerName }}</strong>: {{ power.description }}
                     </li>
                     <li *ngIf="detailsPowers.length === 0">No powers found.</li>
+                  </ul>
+                  <h6 class="mt-3">Sidekicks</h6>
+                  <ul>
+                    <li *ngFor="let sidekick of detailsSidekicks">
+                      <strong>{{ sidekick.name }}</strong> (Age: {{ sidekick.age }})
+                    </li>
+                    <li *ngIf="detailsSidekicks.length === 0">No sidekicks found.</li>
+                  </ul>
+                  <h6 class="mt-3">Comic Appearances</h6>
+                  <ul>
+                    <li *ngFor="let comic of detailsComicAppearances">
+                      <strong>{{ comic.comicTitle }}</strong> (Issue: {{ comic.issueNumber }}, Release: {{ comic.releaseDate | date:'short' }})
+                    </li>
+                    <li *ngIf="detailsComicAppearances.length === 0">No comic appearances found.</li>
                   </ul>
                 </div>
               </td>
@@ -92,7 +98,7 @@
             </div>
             <div class="mb-3">
               <label>First Appearance</label>
-              <input type="datetime-local" class="form-control" [(ngModel)]="selectedHero.firstAppearance" name="firstAppearance" required>
+              <input type="date" class="form-control" [(ngModel)]="selectedHero.firstAppearance" name="firstAppearance" required>
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" [(ngModel)]="selectedHero.isActive" name="isActive">

@@ -4,6 +4,10 @@ import { SuperHero } from 'src/app/shared/models/SuperHero.model';
 import { SuperPowerService } from 'src/app/shared/services/superpower.service';
 import { SuperPower } from 'src/app/shared/models/SuperPower.model';
 import { NotificationService } from 'src/app/features/auth/services/auth.NotificationService';
+import { SidekickService } from 'src/app/shared/services/sidekick.service';
+import { Sidekick } from 'src/app/shared/models/Sidekick.model';
+import { ComicAppearanceService } from 'src/app/shared/services/comicappearance.service';
+import { ComicAppearance } from 'src/app/shared/models/ComicAppearance.model';
 
 @Component({
   selector: 'app-super-hero',
@@ -18,12 +22,16 @@ export class SuperHeroComponent implements OnInit {
   detailsHeroId: string | null = null;
   detailsHero: SuperHero | null = null;
   detailsPowers: SuperPower[] = [];
+  detailsSidekicks: Sidekick[] = [];
+  detailsComicAppearances: ComicAppearance[] = [];
   loadingDetails = false;
 
   constructor(
     private heroService: SuperHeroService,
     private powerService: SuperPowerService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private sidekickService: SidekickService,
+    private comicAppearanceService: ComicAppearanceService
   ) {}
 
   ngOnInit() {
@@ -85,6 +93,8 @@ export class SuperHeroComponent implements OnInit {
       this.detailsHeroId = null;
       this.detailsHero = null;
       this.detailsPowers = [];
+      this.detailsSidekicks = [];
+      this.detailsComicAppearances = [];
       return;
     }
     this.detailsHeroId = heroId;
@@ -95,7 +105,15 @@ export class SuperHeroComponent implements OnInit {
       // Fetch powers for this hero
       this.powerService.getBySuperHero(heroId).subscribe(powers => {
         this.detailsPowers = powers;
-        this.loadingDetails = false;
+        // Fetch sidekicks for this hero
+        this.sidekickService.getBySuperHero(heroId).subscribe(sidekicks => {
+          this.detailsSidekicks = sidekicks;
+          // Fetch comic appearances for this hero
+          this.comicAppearanceService.getBySuperHero(heroId).subscribe(comics => {
+            this.detailsComicAppearances = comics;
+            this.loadingDetails = false;
+          });
+        });
       });
     });
   }

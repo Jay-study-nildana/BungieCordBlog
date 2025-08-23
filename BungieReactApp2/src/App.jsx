@@ -19,6 +19,9 @@ import ReadBlog from './pages/ReadBlog';
 import Admin2 from './pages/Admin2';
 import SuperHeroes from './pages/SuperHeroes';
 import SuperPowers from './pages/SuperPowers';
+import SideKick from './pages/SideKick';
+import ComicAppearance from './pages/ComicAppearance';
+import SideKickComicAppearance from './pages/SideKickComicAppearance';
 
 export default function App() {
   return (
@@ -41,6 +44,9 @@ export default function App() {
           <Route path="/admin2" element={<Admin2 />} />
           <Route path="/super-heroes" element={<SuperHeroes />} />
           <Route path="/super-powers" element={<SuperPowers />} />
+          <Route path="/sidekick" element={<SideKick />} />
+          <Route path="/comic-appearance" element={<ComicAppearance />} />
+          <Route path="/sidekick-comic-appearance" element={<SideKickComicAppearance />} />          
         </Routes>
         <Footer />
       </Router>
