@@ -107,4 +107,19 @@ public class ComicAppearancesController : ControllerBase
         };
         return Ok(resultDto);
     }
+
+    [HttpGet("by-superhero/{superHeroId:guid}")]
+    public async Task<IActionResult> GetBySuperHeroId(Guid superHeroId)
+    {
+        var comics = await repository.GetBySuperHeroIdAsync(superHeroId);
+        var dtos = comics.Select(c => new ComicAppearanceDto
+        {
+            Id = c.Id,
+            ComicTitle = c.ComicTitle,
+            IssueNumber = c.IssueNumber,
+            ReleaseDate = c.ReleaseDate,
+            SuperHeroId = c.SuperHeroId
+        });
+        return Ok(dtos);
+    }
 }

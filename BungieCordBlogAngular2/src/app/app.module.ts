@@ -29,8 +29,8 @@ import { Admin2Component } from './features/admin2/admin2.component';
 import { SuperHeroComponent } from './features/super-hero/super-hero.component';
 import { SuperPowerComponent } from './features/superpower/superpower.component';
 import { SidekickComponent } from './features/sidekick/sidekick.component';
-import { ComicappearanceComponent } from './features/comicappearance/comicappearance.component';
-import { SidekickcomicappearanceComponent } from './features/sidekickcomicappearance/sidekickcomicappearance.component';
+import { ComicAppearanceComponent } from './features/comicappearance/comicappearance.component';
+import { SidekickComicAppearanceComponent } from './features/sidekickcomicappearance/sidekickcomicappearance.component';
 
 @NgModule({
   declarations: [
@@ -56,8 +56,8 @@ import { SidekickcomicappearanceComponent } from './features/sidekickcomicappear
     SuperHeroComponent,
     SuperPowerComponent,
     SidekickComponent,
-    ComicappearanceComponent,
-    SidekickcomicappearanceComponent,
+    ComicAppearanceComponent,
+    SidekickComicAppearanceComponent,
   ],
   imports: [
     BrowserModule,

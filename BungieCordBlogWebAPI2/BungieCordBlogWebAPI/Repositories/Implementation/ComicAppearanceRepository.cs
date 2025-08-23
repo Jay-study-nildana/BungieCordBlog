@@ -52,4 +52,11 @@ public class ComicAppearanceRepository : IComicAppearanceRepository
         await dbContext.SaveChangesAsync();
         return existing;
     }
+
+    public async Task<IEnumerable<ComicAppearance>> GetBySuperHeroIdAsync(Guid superHeroId)
+    {
+        return await dbContext.ComicAppearances
+            .Where(ca => ca.SuperHeroId == superHeroId)
+            .ToListAsync();
+    }
 }

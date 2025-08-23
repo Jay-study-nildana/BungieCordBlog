@@ -7,4 +7,5 @@ public interface IComicAppearanceRepository
     Task<ComicAppearance> AddAsync(ComicAppearance comicAppearance);
     Task<ComicAppearance?> UpdateAsync(Guid id, ComicAppearance comicAppearance);
     Task<ComicAppearance?> DeleteAsync(Guid id);
+    Task<IEnumerable<ComicAppearance>> GetBySuperHeroIdAsync(Guid superHeroId);
 }

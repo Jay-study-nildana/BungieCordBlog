@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Table, Button, Form, Modal, Spinner, Alert }
 
 const API_BASE = 'https://localhost:7226/api/SuperHeroes';
 const POWERS_API_BASE = 'https://localhost:7226/api/SuperPowers/by-superhero';
+const SIDEKICKS_API_BASE = 'https://localhost:7226/api/Sidekicks/by-superhero';
+const COMIC_APPEARANCES_API_BASE = 'https://localhost:7226/api/ComicAppearances/by-superhero';
 
 export default function SuperHeroes() {
   const [heroes, setHeroes] = useState([]);
@@ -28,6 +30,8 @@ export default function SuperHeroes() {
   const [detailsError, setDetailsError] = useState('');
   const [detailsHero, setDetailsHero] = useState(null);
   const [detailsPowers, setDetailsPowers] = useState([]);
+  const [detailsSidekicks, setDetailsSidekicks] = useState([]);
+  const [detailsComics, setDetailsComics] = useState([]);
 
   // Fetch all heroes
   const fetchHeroes = async () => {
@@ -146,6 +150,8 @@ export default function SuperHeroes() {
     setDetailsError('');
     setDetailsHero(null);
     setDetailsPowers([]);
+    setDetailsSidekicks([]);
+    setDetailsComics([]);
     try {
       // Fetch hero details
       const heroRes = await fetch(`${API_BASE}/${id}`);
@@ -158,6 +164,19 @@ export default function SuperHeroes() {
       if (!powersRes.ok) throw new Error('Failed to fetch powers');
       const powersData = await powersRes.json();
       setDetailsPowers(powersData);
+
+      // Fetch sidekicks
+      const sidekicksRes = await fetch(`${SIDEKICKS_API_BASE}/${id}`);
+      if (!sidekicksRes.ok) throw new Error('Failed to fetch sidekicks');
+      const sidekicksData = await sidekicksRes.json();
+      setDetailsSidekicks(sidekicksData);
+
+      // Fetch comic appearances
+      const comicsRes = await fetch(`${COMIC_APPEARANCES_API_BASE}/${id}`);
+      if (!comicsRes.ok) throw new Error('Failed to fetch comic appearances');
+      const comicsData = await comicsRes.json();
+      setDetailsComics(comicsData);
+
     } catch (err) {
       setDetailsError('Error loading details');
     } finally {
@@ -313,6 +332,50 @@ export default function SuperHeroes() {
                             <tr key={power.id}>
                               <td>{power.powerName}</td>
                               <td>{power.description}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    )}
+                    <h5 className="mt-4">Sidekicks</h5>
+                    {detailsSidekicks.length === 0 ? (
+                      <div>No sidekicks found.</div>
+                    ) : (
+                      <Table bordered>
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {detailsSidekicks.map((sk) => (
+                            <tr key={sk.id}>
+                              <td>{sk.name}</td>
+                              <td>{sk.age}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    )}
+                    <h5 className="mt-4">Comic Appearances</h5>
+                    {detailsComics.length === 0 ? (
+                      <div>No comic appearances found.</div>
+                    ) : (
+                      <Table bordered>
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Issue</th>
+                            <th>Release Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {detailsComics.map((comic) => (
+                            <tr key={comic.id}>
+                              <td>{comic.comicTitle}</td>
+                              <td>{comic.issueNumber}</td>
+                              <td>{comic.releaseDate?.replace('T', ' ').slice(0, 16)}</td>
                             </tr>
                           ))}
                         </tbody>

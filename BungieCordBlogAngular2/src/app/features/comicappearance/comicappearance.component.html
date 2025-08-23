@@ -1,8 +1,66 @@
 <div class="container my-5">
   <div class="row justify-content-center">
-    <div class="col-md-8 text-center">
-      <h2>ComicAppearance Section</h2>
-      <p>This is a placeholder for the ComicAppearance component. Content coming soon!</p>
+    <div class="col-md-10">
+      <h2 class="text-center mb-4">Comic Appearance Section</h2>
+      <button class="btn btn-success mb-3" (click)="newAppearance()">Add New Comic Appearance</button>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Comic Title</th>
+            <th>Issue Number</th>
+            <th>Release Date</th>
+            <th>SuperHero</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appearance of appearances">
+            <td>{{ appearance.comicTitle }}</td>
+            <td>{{ appearance.issueNumber }}</td>
+            <td>{{ appearance.releaseDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ getSuperHeroName(appearance.superHeroId) }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" (click)="selectAppearance(appearance)">Edit</button>
+              <button 
+                class="btn btn-danger btn-sm" 
+                [disabled]="!appearance.id"
+                (click)="appearance.id && deleteAppearance(appearance.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Form for Add/Edit -->
+      <div *ngIf="selectedAppearance" class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ isEditing ? 'Edit' : 'Add' }} Comic Appearance</h5>
+          <form (ngSubmit)="saveAppearance()" #appearanceForm="ngForm">
+            <div class="mb-3">
+              <label>Comic Title</label>
+              <input class="form-control" [(ngModel)]="selectedAppearance.comicTitle" name="comicTitle" required>
+            </div>
+            <div class="mb-3">
+              <label>Issue Number</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedAppearance.issueNumber" name="issueNumber" required>
+            </div>
+            <div class="mb-3">
+              <label>Release Date</label>
+              <input type="date" class="form-control" [(ngModel)]="selectedAppearance.releaseDate" name="releaseDate" required>
+            </div>
+            <div class="mb-3">
+              <label>SuperHero</label>
+              <select class="form-select" [(ngModel)]="selectedAppearance.superHeroId" name="superHeroId" required>
+                <option value="" disabled>Select a SuperHero</option>
+                <option *ngFor="let hero of superHeroes" [value]="hero.id">{{ hero.name }}</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success me-2">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>

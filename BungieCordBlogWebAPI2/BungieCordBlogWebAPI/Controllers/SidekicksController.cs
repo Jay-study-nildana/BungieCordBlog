@@ -100,4 +100,18 @@ public class SidekicksController : ControllerBase
         };
         return Ok(resultDto);
     }
+
+    [HttpGet("by-superhero/{superHeroId:guid}")]
+    public async Task<IActionResult> GetBySuperHeroId(Guid superHeroId)
+    {
+        var sidekicks = await repository.GetBySuperHeroIdAsync(superHeroId);
+        var dtos = sidekicks.Select(s => new SidekickDto
+        {
+            Id = s.Id,
+            Name = s.Name,
+            Age = s.Age,
+            SuperHeroId = s.SuperHeroId
+        });
+        return Ok(dtos);
+    }
 }

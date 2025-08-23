@@ -7,4 +7,7 @@ public interface ISidekickRepository
     Task<Sidekick> AddAsync(Sidekick sidekick);
     Task<Sidekick?> UpdateAsync(Guid id, Sidekick sidekick);
     Task<Sidekick?> DeleteAsync(Guid id);
+
+    Task<IEnumerable<Sidekick>> GetBySuperHeroIdAsync(Guid superHeroId);
+
 }
