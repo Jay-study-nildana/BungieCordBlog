@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BungieCordBlogWebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250823072627_MigrationAppDB")]
-    partial class MigrationAppDB
+    [Migration("20250824071023_MigrationImageOne")]
+    partial class MigrationImageOne
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,6 +224,39 @@ namespace BungieCordBlogWebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SuperHeroes");
+                });
+
+            modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.SuperHeroImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SuperHeroId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SuperHeroImages");
                 });
 
             modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.SuperPower", b =>

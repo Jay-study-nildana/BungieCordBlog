@@ -20,6 +20,8 @@ import { SuperPowerComponent } from './features/superpower/superpower.component'
 import { SidekickComponent } from './features/sidekick/sidekick.component';
 import { ComicAppearanceComponent } from './features/comicappearance/comicappearance.component';
 import { SidekickComicAppearanceComponent } from './features/sidekickcomicappearance/sidekickcomicappearance.component';
+import { Home2Component } from './features/home2/home2.component';
+import { SuperHeroDetailsComponent } from './shared/components/super-hero-details/super-hero-details.component';
 
 const routes: Routes = [
   {
@@ -103,7 +105,9 @@ const routes: Routes = [
   {
     path: 'sidekickcomicappearance',
     component: SidekickComicAppearanceComponent
-  }
+  },
+  { path: 'home2', component: Home2Component },
+  { path: 'superhero/:id', component: SuperHeroDetailsComponent }
 ];
 
 @NgModule({

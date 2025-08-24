@@ -8,6 +8,17 @@ import { SidekickService } from 'src/app/shared/services/sidekick.service';
 import { Sidekick } from 'src/app/shared/models/Sidekick.model';
 import { ComicAppearanceService } from 'src/app/shared/services/comicappearance.service';
 import { ComicAppearance } from 'src/app/shared/models/ComicAppearance.model';
+import { HttpClient } from '@angular/common/http';
+
+interface SuperHeroImage {
+  superHeroId: string;
+  id: string;
+  fileName: string;
+  fileExtension: string;
+  title: string;
+  url: string;
+  dateCreated: string;
+}
 
 @Component({
   selector: 'app-super-hero',
@@ -26,12 +37,25 @@ export class SuperHeroComponent implements OnInit {
   detailsComicAppearances: ComicAppearance[] = [];
   loadingDetails = false;
 
+  // For image gallery
+  detailsImages: SuperHeroImage[] = [];
+  gallerySelectedImage: SuperHeroImage | null = null;
+
+  // For image upload
+  showImageUploadHeroId: string | null = null;
+  imageFile: File | null = null;
+  imageTitle: string = '';
+  uploadingImage = false;
+  uploadError: string = '';
+  uploadedImageUrl: string = '';
+
   constructor(
     private heroService: SuperHeroService,
     private powerService: SuperPowerService,
     private notificationService: NotificationService,
     private sidekickService: SidekickService,
-    private comicAppearanceService: ComicAppearanceService
+    private comicAppearanceService: ComicAppearanceService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -95,10 +119,13 @@ export class SuperHeroComponent implements OnInit {
       this.detailsPowers = [];
       this.detailsSidekicks = [];
       this.detailsComicAppearances = [];
+      this.detailsImages = [];
+      this.gallerySelectedImage = null;
       return;
     }
     this.detailsHeroId = heroId;
     this.loadingDetails = true;
+    this.gallerySelectedImage = null;
     // Fetch hero details
     this.heroService.getById(heroId).subscribe(hero => {
       this.detailsHero = hero;
@@ -111,10 +138,76 @@ export class SuperHeroComponent implements OnInit {
           // Fetch comic appearances for this hero
           this.comicAppearanceService.getBySuperHero(heroId).subscribe(comics => {
             this.detailsComicAppearances = comics;
-            this.loadingDetails = false;
+            // Fetch images for this hero
+            this.http.get<SuperHeroImage[]>(`https://localhost:7226/api/SuperHeroes/${heroId}/images`)
+              .subscribe(images => {
+                this.detailsImages = images;
+                this.loadingDetails = false;
+              });
           });
         });
       });
+    });
+  }
+
+  // Gallery logic
+  selectGalleryImage(image: SuperHeroImage) {
+    this.gallerySelectedImage = image;
+  }
+
+  // Image upload logic
+  openImageUpload(heroId: string) {
+    this.showImageUploadHeroId = heroId;
+    this.imageFile = null;
+    this.imageTitle = '';
+    this.uploadError = '';
+    this.uploadedImageUrl = '';
+  }
+
+  closeImageUpload() {
+    this.showImageUploadHeroId = null;
+    this.imageFile = null;
+    this.imageTitle = '';
+    this.uploadError = '';
+    this.uploadedImageUrl = '';
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.imageFile = event.target.files[0];
+    }
+  }
+
+  uploadImage(heroId: string) {
+    if (!this.imageFile || !this.imageTitle) {
+      this.uploadError = 'Please select an image and enter a title.';
+      return;
+    }
+    this.uploadingImage = true;
+    this.uploadError = '';
+    const formData = new FormData();
+    formData.append('file', this.imageFile);
+    formData.append('superhero_id', heroId);
+    formData.append('title', this.imageTitle);
+
+    this.http.post<any>(
+      `https://localhost:7226/api/SuperHeroes/${heroId}/upload-image-for-superhero`,
+      formData
+    ).subscribe({
+      next: (response) => {
+        this.uploadingImage = false;
+        this.uploadedImageUrl = response.url;
+        this.notificationService.show('Image uploaded successfully!');
+        // Optionally refresh gallery after upload
+        this.http.get<SuperHeroImage[]>(`https://localhost:7226/api/SuperHeroes/${heroId}/images`)
+          .subscribe(images => {
+            this.detailsImages = images;
+          });
+      },
+      error: (err) => {
+        this.uploadingImage = false;
+        this.uploadError = 'Image upload failed. Please try again.';
+      }
     });
   }
 }

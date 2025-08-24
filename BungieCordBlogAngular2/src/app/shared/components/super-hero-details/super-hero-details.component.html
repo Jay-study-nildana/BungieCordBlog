@@ -1,0 +1,59 @@
+<div class="container my-4">
+  <div *ngIf="loading" class="text-center my-3">
+    <span class="spinner-border"></span> Loading...
+  </div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+  <div *ngIf="hero && !loading">
+    <div class="card mx-auto" style="max-width: 500px;">
+      <div class="card-body">
+        <h4 class="card-title text-center">{{ hero.name }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted text-center">{{ hero.alias }}</h6>
+        <ul class="list-unstyled text-center mb-4">
+          <li><strong>Origin:</strong> {{ hero.origin }}</li>
+          <li><strong>First Appearance:</strong> {{ hero.firstAppearance | date:'yyyy-MM-dd' }}</li>
+          <li><strong>Active:</strong> {{ hero.isActive ? 'Yes' : 'No' }}</li>
+          <li><strong>Age:</strong> {{ hero.age }}</li>
+        </ul>
+        <div class="mb-4">
+          <h5 class="text-center mb-2">Image Gallery</h5>
+          <div *ngIf="images.length > 0" class="d-flex align-items-center justify-content-center" style="gap:8px;">
+            <button class="btn btn-outline-secondary btn-sm"
+                    style="height:40px; width:40px;"
+                    (click)="prevImage()">
+              &lt;
+            </button>
+            <img [src]="images[imageIndex].url"
+                 [alt]="images[imageIndex].title"
+                 class="img-thumbnail"
+                 style="height:200px; width:180px; object-fit:cover;">
+            <button class="btn btn-outline-secondary btn-sm"
+                    style="height:40px; width:40px;"
+                    (click)="nextImage()">
+              &gt;
+            </button>
+          </div>
+          <div *ngIf="images.length > 0" class="text-center mt-2" style="font-size:1em;">
+            {{ images[imageIndex].title }}
+          </div>
+          <div *ngIf="images.length === 0" class="text-center text-muted">
+            No images found.
+          </div>
+        </div>
+        <h5 class="text-center mt-4 mb-2">Super Powers</h5>
+        <ul class="list-group mb-4">
+          <li *ngFor="let power of powers" class="list-group-item text-center">
+            <strong>{{ power.powerName }}</strong>: {{ power.description }}
+          </li>
+          <li *ngIf="powers.length === 0" class="list-group-item text-muted text-center">No powers found.</li>
+        </ul>
+        <h5 class="text-center mt-4 mb-2">Sidekicks</h5>
+        <ul class="list-group">
+          <li *ngFor="let sidekick of sidekicks" class="list-group-item text-center">
+            <strong>{{ sidekick.name }}</strong> (Age: {{ sidekick.age }})
+          </li>
+          <li *ngIf="sidekicks.length === 0" class="list-group-item text-muted text-center">No sidekicks found.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -19,6 +19,8 @@ namespace BungieCordBlogWebAPI.Data
         public DbSet<ComicAppearance> ComicAppearances { get; set; }
         public DbSet<SidekickComicAppearance> SidekickComicAppearances { get; set; }
 
+        public DbSet<SuperHeroImage> SuperHeroImages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -38,7 +38,10 @@ export default function AppNavbar() {
             </Nav.Link>
             <Nav.Link as={Link} to="/admin2" className="text-white">
               Admin2
-            </Nav.Link>            
+            </Nav.Link>        
+            <Nav.Link as={Link} to="/home2" className="text-white">
+              Home2
+            </Nav.Link>    
             {!isLoggedIn && (
               <>
                 <Nav.Link as={Link} to="/registration" className="text-white">
