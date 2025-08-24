@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import './styles/custom-theme.css';
@@ -22,6 +22,14 @@ import SuperPowers from './pages/SuperPowers';
 import SideKick from './pages/SideKick';
 import ComicAppearance from './pages/ComicAppearance';
 import SideKickComicAppearance from './pages/SideKickComicAppearance';
+import Home2 from './pages/Home2';
+import SuperHeroCard from './pages/SuperHeroCard';
+
+// Wrapper to pass superHeroId from URL params
+function SuperHeroCardWrapper() {
+  const { id } = useParams();
+  return <SuperHeroCard superHeroId={id} />;
+}
 
 export default function App() {
   return (
@@ -46,7 +54,9 @@ export default function App() {
           <Route path="/super-powers" element={<SuperPowers />} />
           <Route path="/sidekick" element={<SideKick />} />
           <Route path="/comic-appearance" element={<ComicAppearance />} />
-          <Route path="/sidekick-comic-appearance" element={<SideKickComicAppearance />} />          
+          <Route path="/sidekick-comic-appearance" element={<SideKickComicAppearance />} />
+          <Route path="/home2" element={<Home2 />} />          
+          <Route path="/superhero/:id" element={<SuperHeroCardWrapper />} />
         </Routes>
         <Footer />
       </Router>

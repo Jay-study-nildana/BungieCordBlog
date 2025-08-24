@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BungieCordBlogWebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationAppDB : Migration
+    public partial class MigrationImageOne : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,6 +74,23 @@ namespace BungieCordBlogWebAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SuperHeroes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SuperHeroImages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SuperHeroId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SuperHeroImages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -222,6 +239,9 @@ namespace BungieCordBlogWebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "SidekickComicAppearances");
+
+            migrationBuilder.DropTable(
+                name: "SuperHeroImages");
 
             migrationBuilder.DropTable(
                 name: "SuperPowers");

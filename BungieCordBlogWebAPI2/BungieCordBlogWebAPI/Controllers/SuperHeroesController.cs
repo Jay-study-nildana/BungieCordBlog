@@ -123,4 +123,35 @@ public class SuperHeroesController : ControllerBase
         };
         return Ok(resultDto);
     }
+
+    public class ImageUploadRequest
+    {
+        [FromForm]
+        public IFormFile file { get; set; }
+        [FromForm]
+        public Guid superhero_id { get; set; }
+        [FromForm]
+        public string title { get; set; }
+    }
+
+    [HttpPost("{superhero_id:guid}/upload-image-for-superhero")]
+    public async Task<IActionResult> UploadImage(ImageUploadRequest imageUploadRequest)
+    {
+        IFormFile file = imageUploadRequest.file;
+        Guid id = imageUploadRequest.superhero_id;
+        string title = imageUploadRequest.title;
+
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        var createdImage = await repository.SaveSuperHeroImageAsync(id, file, title);
+        return Ok(createdImage);
+    }
+
+    [HttpGet("{superheroId:guid}/images")]
+    public async Task<IActionResult> GetImagesForSuperHero(Guid superheroId)
+    {
+        var images = await repository.GetImagesForSuperHeroAsync(superheroId);
+        return Ok(images);
+    }
 }

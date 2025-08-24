@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Table, Button, Form, Modal, Spinner, Alert } from 'react-bootstrap';
+import SuperHeroDetails from './SuperHeroDetails';
 
 const API_BASE = 'https://localhost:7226/api/SuperHeroes';
 const POWERS_API_BASE = 'https://localhost:7226/api/SuperPowers/by-superhero';
@@ -32,6 +33,17 @@ export default function SuperHeroes() {
   const [detailsPowers, setDetailsPowers] = useState([]);
   const [detailsSidekicks, setDetailsSidekicks] = useState([]);
   const [detailsComics, setDetailsComics] = useState([]);
+  const [detailsImages, setDetailsImages] = useState([]);
+
+  // Image upload modal state
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageForm, setImageForm] = useState({
+    file: null,
+    title: '',
+  });
+  const [imageSubmitting, setImageSubmitting] = useState(false);
+  const [imageError, setImageError] = useState('');
+  const [imageSuccess, setImageSuccess] = useState('');
 
   // Fetch all heroes
   const fetchHeroes = async () => {
@@ -152,6 +164,7 @@ export default function SuperHeroes() {
     setDetailsPowers([]);
     setDetailsSidekicks([]);
     setDetailsComics([]);
+    setDetailsImages([]);
     try {
       // Fetch hero details
       const heroRes = await fetch(`${API_BASE}/${id}`);
@@ -177,10 +190,72 @@ export default function SuperHeroes() {
       const comicsData = await comicsRes.json();
       setDetailsComics(comicsData);
 
+      // Fetch images
+      const imagesRes = await fetch(`${API_BASE}/${id}/images`);
+      if (!imagesRes.ok) throw new Error('Failed to fetch images');
+      const imagesData = await imagesRes.json();
+      setDetailsImages(imagesData);
+
     } catch (err) {
       setDetailsError('Error loading details');
     } finally {
       setDetailsLoading(false);
+    }
+  };
+
+  // Image upload handlers
+  const openImageModal = (heroId) => {
+    setSelectedId(heroId);
+    setImageForm({ file: null, title: '' });
+    setImageError('');
+    setImageSuccess('');
+    setShowImageModal(true);
+  };
+
+  const handleImageChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'file') {
+      setImageForm((prev) => ({
+        ...prev,
+        file: files[0] || null,
+      }));
+    } else {
+      setImageForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleImageSubmit = async (e) => {
+    e.preventDefault();
+    setImageSubmitting(true);
+    setImageError('');
+    setImageSuccess('');
+    if (!imageForm.file) {
+      setImageError('Please select an image file.');
+      setImageSubmitting(false);
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append('file', imageForm.file);
+      formData.append('superhero_id', selectedId);
+      formData.append('title', imageForm.title);
+
+      const res = await fetch(`${API_BASE}/${selectedId}/upload-image-for-superhero`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Failed to upload image');
+      const data = await res.json();
+      setImageSuccess('Image uploaded successfully!');
+      setTimeout(() => setShowImageModal(false), 1500);
+    } catch (err) {
+      setImageError('Error uploading image');
+    } finally {
+      setImageSubmitting(false);
     }
   };
 
@@ -266,9 +341,17 @@ export default function SuperHeroes() {
                       <Button
                         variant="outline-info"
                         size="sm"
+                        className="me-2"
                         onClick={() => handleViewDetails(hero.id)}
                       >
                         View Details
+                      </Button>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => openImageModal(hero.id)}
+                      >
+                        Add Images
                       </Button>
                     </td>
                   </tr>
@@ -279,119 +362,16 @@ export default function SuperHeroes() {
 
           {/* Details Section */}
           {detailsId && (
-            <Card className="mt-4 shadow-sm">
-              <Card.Body>
-                <Card.Title as="h4">Super Hero Details</Card.Title>
-                {detailsLoading ? (
-                  <div className="text-center"><Spinner animation="border" /></div>
-                ) : detailsError ? (
-                  <Alert variant="danger">{detailsError}</Alert>
-                ) : detailsHero ? (
-                  <>
-                    <Table bordered>
-                      <tbody>
-                        <tr>
-                          <th>Name</th>
-                          <td>{detailsHero.name}</td>
-                        </tr>
-                        <tr>
-                          <th>Alias</th>
-                          <td>{detailsHero.alias}</td>
-                        </tr>
-                        <tr>
-                          <th>Age</th>
-                          <td>{detailsHero.age}</td>
-                        </tr>
-                        <tr>
-                          <th>Origin</th>
-                          <td>{detailsHero.origin}</td>
-                        </tr>
-                        <tr>
-                          <th>First Appearance</th>
-                          <td>{detailsHero.firstAppearance?.replace('T', ' ').slice(0, 16)}</td>
-                        </tr>
-                        <tr>
-                          <th>Active</th>
-                          <td>{detailsHero.isActive ? 'Yes' : 'No'}</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                    <h5 className="mt-4">Super Powers</h5>
-                    {detailsPowers.length === 0 ? (
-                      <div>No powers found.</div>
-                    ) : (
-                      <Table bordered>
-                        <thead>
-                          <tr>
-                            <th>Power Name</th>
-                            <th>Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {detailsPowers.map((power) => (
-                            <tr key={power.id}>
-                              <td>{power.powerName}</td>
-                              <td>{power.description}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    )}
-                    <h5 className="mt-4">Sidekicks</h5>
-                    {detailsSidekicks.length === 0 ? (
-                      <div>No sidekicks found.</div>
-                    ) : (
-                      <Table bordered>
-                        <thead>
-                          <tr>
-                            <th>Name</th>
-                            <th>Age</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {detailsSidekicks.map((sk) => (
-                            <tr key={sk.id}>
-                              <td>{sk.name}</td>
-                              <td>{sk.age}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    )}
-                    <h5 className="mt-4">Comic Appearances</h5>
-                    {detailsComics.length === 0 ? (
-                      <div>No comic appearances found.</div>
-                    ) : (
-                      <Table bordered>
-                        <thead>
-                          <tr>
-                            <th>Title</th>
-                            <th>Issue</th>
-                            <th>Release Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {detailsComics.map((comic) => (
-                            <tr key={comic.id}>
-                              <td>{comic.comicTitle}</td>
-                              <td>{comic.issueNumber}</td>
-                              <td>{comic.releaseDate?.replace('T', ' ').slice(0, 16)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    )}
-                  </>
-                ) : null}
-                <Button
-                  variant="secondary"
-                  className="mt-3"
-                  onClick={() => setDetailsId(null)}
-                >
-                  Close Details
-                </Button>
-              </Card.Body>
-            </Card>
+            <SuperHeroDetails
+              detailsHero={detailsHero}
+              detailsLoading={detailsLoading}
+              detailsError={detailsError}
+              detailsPowers={detailsPowers}
+              detailsSidekicks={detailsSidekicks}
+              detailsComics={detailsComics}
+              detailsImages={detailsImages}
+              onClose={() => setDetailsId(null)}
+            />
           )}
 
         </Col>
@@ -471,6 +451,46 @@ export default function SuperHeroes() {
             </Button>
             <Button variant="primary" type="submit" disabled={submitting}>
               {submitting ? 'Saving...' : 'Save'}
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+
+      {/* Modal for Image Upload */}
+      <Modal show={showImageModal} onHide={() => setShowImageModal(false)}>
+        <Form onSubmit={handleImageSubmit} encType="multipart/form-data">
+          <Modal.Header closeButton>
+            <Modal.Title>Add Image for Super Hero</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Image File</Form.Label>
+              <Form.Control
+                type="file"
+                name="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                name="title"
+                value={imageForm.title}
+                onChange={handleImageChange}
+                required
+              />
+            </Form.Group>
+            {imageError && <div className="alert alert-danger">{imageError}</div>}
+            {imageSuccess && <div className="alert alert-success">{imageSuccess}</div>}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowImageModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit" disabled={imageSubmitting}>
+              {imageSubmitting ? 'Uploading...' : 'Upload'}
             </Button>
           </Modal.Footer>
         </Form>
