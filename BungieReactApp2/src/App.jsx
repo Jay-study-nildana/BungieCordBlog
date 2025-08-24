@@ -24,6 +24,7 @@ import ComicAppearance from './pages/ComicAppearance';
 import SideKickComicAppearance from './pages/SideKickComicAppearance';
 import Home2 from './pages/Home2';
 import SuperHeroCard from './pages/SuperHeroCard';
+import Search from './pages/Search';
 
 // Wrapper to pass superHeroId from URL params
 function SuperHeroCardWrapper() {
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/sidekick-comic-appearance" element={<SideKickComicAppearance />} />
           <Route path="/home2" element={<Home2 />} />          
           <Route path="/superhero/:id" element={<SuperHeroCardWrapper />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
         <Footer />
       </Router>

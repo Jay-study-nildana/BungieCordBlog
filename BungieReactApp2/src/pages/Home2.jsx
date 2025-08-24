@@ -115,6 +115,11 @@ export default function Home2() {
               <Card.Text>
                 This is a placeholder for the Home2 page. Below is a list of Super Heroes.
               </Card.Text>
+              <div className="mt-3 text-end">
+                <Button as={Link} to="/search" variant="info">
+                  Go to Search
+                </Button>
+              </div>
             </Card.Body>
           </Card>
           {error && <Alert variant="danger">{error}</Alert>}

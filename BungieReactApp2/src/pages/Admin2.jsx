@@ -1,13 +1,37 @@
-import React from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Container, Row, Col, Card, Table, Spinner, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+const SUMMARY_API = 'https://localhost:7226/api/SuperHeroUniverse/admin-summary';
+
 export default function Admin2() {
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const res = await fetch(SUMMARY_API);
+        if (!res.ok) throw new Error('Failed to fetch summary');
+        const data = await res.json();
+        setSummary(data);
+      } catch (err) {
+        setError('Error loading admin summary');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSummary();
+  }, []);
+
   return (
     <Container className="mt-4">
       <Row className="justify-content-center">
         <Col md={8}>
-          <Card className="shadow-sm">
+          <Card className="shadow-sm mb-4">
             <Card.Body>
               <Card.Title as="h2" className="mb-3">Admin2 Page</Card.Title>
               <Card.Text>
@@ -32,6 +56,49 @@ export default function Admin2() {
                   </Link>
                 </div>
               </Card.Text>
+            </Card.Body>
+          </Card>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <Card.Title as="h4" className="mb-3">Admin Summary</Card.Title>
+              {loading ? (
+                <div className="text-center"><Spinner animation="border" /></div>
+              ) : error ? (
+                <Alert variant="danger">{error}</Alert>
+              ) : summary ? (
+                <Table bordered>
+                  <tbody>
+                    <tr>
+                      <th>Super Hero Count</th>
+                      <td>{summary.superHeroCount}</td>
+                    </tr>
+                    <tr>
+                      <th>Super Power Count</th>
+                      <td>{summary.superPowerCount}</td>
+                    </tr>
+                    <tr>
+                      <th>Sidekick Count</th>
+                      <td>{summary.sidekickCount}</td>
+                    </tr>
+                    <tr>
+                      <th>Comic Appearance Count</th>
+                      <td>{summary.comicAppearanceCount}</td>
+                    </tr>
+                    <tr>
+                      <th>Sidekick Comic Appearance Count</th>
+                      <td>{summary.sidekickComicAppearanceCount}</td>
+                    </tr>
+                    <tr>
+                      <th>User Count</th>
+                      <td>{summary.userCount}</td>
+                    </tr>
+                    <tr>
+                      <th>Role Count</th>
+                      <td>{summary.roleCount}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              ) : null}
             </Card.Body>
           </Card>
         </Col>

@@ -22,6 +22,7 @@ import { ComicAppearanceComponent } from './features/comicappearance/comicappear
 import { SidekickComicAppearanceComponent } from './features/sidekickcomicappearance/sidekickcomicappearance.component';
 import { Home2Component } from './features/home2/home2.component';
 import { SuperHeroDetailsComponent } from './shared/components/super-hero-details/super-hero-details.component';
+import { SearchComponent } from './features/search/search.component';
 
 const routes: Routes = [
   {
@@ -107,7 +108,8 @@ const routes: Routes = [
     component: SidekickComicAppearanceComponent
   },
   { path: 'home2', component: Home2Component },
-  { path: 'superhero/:id', component: SuperHeroDetailsComponent }
+  { path: 'superhero/:id', component: SuperHeroDetailsComponent },
+  { path: 'search', component: SearchComponent }
 ];
 
 @NgModule({
