@@ -10,4 +10,47 @@
       <a class="btn btn-dark mt-3 ms-2" routerLink="/sidekickcomicappearance">Go to SidekickComicAppearance</a>
     </div>
   </div>
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+      <div *ngIf="loading" class="text-center my-3">
+        <span class="spinner-border"></span> Loading summary...
+      </div>
+      <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+      <div *ngIf="summary && !loading">
+        <h4 class="text-center mb-4">Admin Summary</h4>
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <th>SuperHero Count</th>
+              <td>{{ summary.superHeroCount }}</td>
+            </tr>
+            <tr>
+              <th>SuperPower Count</th>
+              <td>{{ summary.superPowerCount }}</td>
+            </tr>
+            <tr>
+              <th>Sidekick Count</th>
+              <td>{{ summary.sidekickCount }}</td>
+            </tr>
+            <tr>
+              <th>Comic Appearance Count</th>
+              <td>{{ summary.comicAppearanceCount }}</td>
+            </tr>
+            <tr>
+              <th>Sidekick Comic Appearance Count</th>
+              <td>{{ summary.sidekickComicAppearanceCount }}</td>
+            </tr>
+            <tr>
+              <th>User Count</th>
+              <td>{{ summary.userCount }}</td>
+            </tr>
+            <tr>
+              <th>Role Count</th>
+              <td>{{ summary.roleCount }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
