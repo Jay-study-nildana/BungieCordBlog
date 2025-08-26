@@ -19,7 +19,11 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/home2">Home2</a>
         </li>
-
+        <ng-container *ngIf="user">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/order-basket">Order Basket</a>
+          </li>
+        </ng-container>
         <ng-container *ngIf="user !== undefined">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

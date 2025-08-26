@@ -18,6 +18,18 @@ interface SuperHero {
   isActive: boolean;
 }
 
+interface ProductStock {
+  id: string;
+  superHeroId: string;
+  unitPrice: number;
+  quantity: number;
+  sku: string;
+  description: string;
+  currency: string;
+  isActive: boolean;
+  lastUpdated: string;
+}
+
 @Component({
   selector: 'app-super-hero-details',
   templateUrl: './super-hero-details.component.html'
@@ -31,6 +43,7 @@ export class SuperHeroDetailsComponent implements OnInit {
   sidekicks: Sidekick[] = [];
   images: SuperHeroImage[] = [];
   imageIndex = 0;
+  productStock: ProductStock | null = null;
 
   constructor(
     private http: HttpClient,
@@ -64,6 +77,13 @@ export class SuperHeroDetailsComponent implements OnInit {
                 this.images = images;
                 this.imageIndex = 0;
               });
+              // Fetch product stock details
+              this.http.get<ProductStock>(`https://localhost:7226/api/ProductStock/by-superhero/${id}`)
+                .subscribe({
+                  next: stock => {
+                    this.productStock = stock;
+                  }
+                });
             },
             error: () => {
               this.error = 'Could not load superhero details.';

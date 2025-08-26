@@ -57,6 +57,9 @@ export default function AppNavbar() {
                 <Nav.Link as={Link} to="/user-profile" className="text-white">
                   User Profile
                 </Nav.Link>
+                <Nav.Link as={Link} to="/order-basket" className="text-white">
+                  Order Basket
+                </Nav.Link>
                 <Nav.Link
                   as="button"
                   className="text-white btn btn-link p-0 ms-3"

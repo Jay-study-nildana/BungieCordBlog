@@ -1,0 +1,30 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h2>Order Basket</h2>
+      <div *ngIf="loading" class="my-3">
+        <span class="spinner-border"></span> Loading basket...
+      </div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <div *ngIf="basket && !loading">
+        <p><strong>Basket ID:</strong> {{ basket.id }}</p>
+        <p><strong>User ID:</strong> {{ basket.userId }}</p>
+        <p><strong>Created:</strong> {{ basket.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+        <p><strong>Updated:</strong> {{ basket.updatedDate | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+        <div class="alert alert-info mt-4">
+          <strong>Basket Summary:</strong>
+          <ul class="list-unstyled mt-2">
+            <li *ngIf="basket.items.length === 0">No items in your basket yet.</li>
+            <li *ngFor="let item of basket.items">
+              <strong>Product ID:</strong> {{ item.productId }} |
+              <strong>Quantity:</strong> {{ item.quantity }} |
+              <strong>Unit Price:</strong> {{ item.unitPrice | currency }} |
+              <strong>Added:</strong> {{ item.addedDate | date:'yyyy-MM-dd HH:mm:ss' }}
+            </li>
+          </ul>
+        </div>
+        <button class="btn btn-success mt-3" [disabled]="basket.items.length === 0">Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>

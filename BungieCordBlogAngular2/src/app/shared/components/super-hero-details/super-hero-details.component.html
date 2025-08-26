@@ -47,12 +47,25 @@
           <li *ngIf="powers.length === 0" class="list-group-item text-muted text-center">No powers found.</li>
         </ul>
         <h5 class="text-center mt-4 mb-2">Sidekicks</h5>
-        <ul class="list-group">
+        <ul class="list-group mb-4">
           <li *ngFor="let sidekick of sidekicks" class="list-group-item text-center">
             <strong>{{ sidekick.name }}</strong> (Age: {{ sidekick.age }})
           </li>
           <li *ngIf="sidekicks.length === 0" class="list-group-item text-muted text-center">No sidekicks found.</li>
         </ul>
+        <h5 class="text-center mt-4 mb-2">Product Stock</h5>
+        <div *ngIf="productStock" class="mb-3">
+          <ul class="list-group">
+            <li class="list-group-item"><strong>SKU:</strong> {{ productStock.sku }}</li>
+            <li class="list-group-item"><strong>Description:</strong> {{ productStock.description }}</li>
+            <li class="list-group-item"><strong>Unit Price:</strong> {{ productStock.unitPrice | currency:productStock.currency }}</li>
+            <li class="list-group-item"><strong>Quantity:</strong> {{ productStock.quantity }}</li>
+            <li class="list-group-item"><strong>Currency:</strong> {{ productStock.currency }}</li>
+            <li class="list-group-item"><strong>Active:</strong> {{ productStock.isActive ? 'Yes' : 'No' }}</li>
+            <li class="list-group-item"><strong>Last Updated:</strong> {{ productStock.lastUpdated | date:'yyyy-MM-dd HH:mm:ss' }}</li>
+          </ul>
+        </div>
+        <div *ngIf="!productStock" class="text-muted mb-3">No product stock information found.</div>
       </div>
     </div>
   </div>

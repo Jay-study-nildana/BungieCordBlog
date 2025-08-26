@@ -4,6 +4,7 @@ using BungieCordBlogWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BungieCordBlogWebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250826054033_MigrationPayment")]
+    partial class MigrationPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,46 +288,6 @@ namespace BungieCordBlogWebAPI.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.ProductStock", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SKU")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SuperHeroId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SuperHeroId");
-
-                    b.ToTable("ProductStocks");
-                });
-
             modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.Sidekick", b =>
                 {
                     b.Property<Guid>("Id")
@@ -509,17 +472,6 @@ namespace BungieCordBlogWebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.ProductStock", b =>
-                {
-                    b.HasOne("BungieCordBlogWebAPI.Models.Domain.SuperHero", "SuperHero")
-                        .WithMany()
-                        .HasForeignKey("SuperHeroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SuperHero");
                 });
 
             modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.Sidekick", b =>

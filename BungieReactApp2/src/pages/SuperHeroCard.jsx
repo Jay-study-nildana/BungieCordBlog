@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Spinner, Alert, Table } from 'react-bootstrap';
 
-const API_BASE = 'https://localhost:7226/api/SuperHeroes';
-const POWERS_API_BASE = 'https://localhost:7226/api/SuperPowers/by-superhero';
-const SIDEKICKS_API_BASE = 'https://localhost:7226/api/Sidekicks/by-superhero';
+const PRODUCT_STOCK_API = 'https://localhost:7226/api/ProductStock/by-superhero';
 
 export default function SuperHeroCard({ superHeroId }) {
   const [hero, setHero] = useState(null);
@@ -21,6 +19,14 @@ export default function SuperHeroCard({ superHeroId }) {
   const [images, setImages] = useState([]);
   const [imagesLoading, setImagesLoading] = useState(true);
   const [imagesError, setImagesError] = useState('');
+
+  const [productStock, setProductStock] = useState(null);
+  const [stockLoading, setStockLoading] = useState(false);
+  const [stockError, setStockError] = useState('');
+
+  const API_BASE = 'https://localhost:7226/api/SuperHeroes';
+  const POWERS_API_BASE = 'https://localhost:7226/api/SuperPowers/by-superhero';
+  const SIDEKICKS_API_BASE = 'https://localhost:7226/api/Sidekicks/by-superhero';
 
   useEffect(() => {
     if (!superHeroId) return;
@@ -96,6 +102,25 @@ export default function SuperHeroCard({ superHeroId }) {
       }
     };
     fetchImages();
+  }, [superHeroId]);
+
+  useEffect(() => {
+    if (!superHeroId) return;
+    const fetchProductStock = async () => {
+      setStockLoading(true);
+      setStockError('');
+      try {
+        const res = await fetch(`${PRODUCT_STOCK_API}/${superHeroId}`);
+        if (!res.ok) throw new Error('Failed to fetch product stock');
+        const data = await res.json();
+        setProductStock(data);
+      } catch (err) {
+        setStockError('Error loading product stock');
+      } finally {
+        setStockLoading(false);
+      }
+    };
+    fetchProductStock();
   }, [superHeroId]);
 
   return (
@@ -196,6 +221,47 @@ export default function SuperHeroCard({ superHeroId }) {
                       </Col>
                     ))}
                   </Row>
+                )}
+                <h5 className="mt-4">Product Stock</h5>
+                {stockLoading ? (
+                  <Spinner animation="border" size="sm" />
+                ) : stockError ? (
+                  <Alert variant="danger">{stockError}</Alert>
+                ) : productStock ? (
+                  <Table bordered>
+                    <tbody>
+                      <tr>
+                        <th>SKU</th>
+                        <td>{productStock.sku}</td>
+                      </tr>
+                      <tr>
+                        <th>Description</th>
+                        <td>{productStock.description}</td>
+                      </tr>
+                      <tr>
+                        <th>Unit Price</th>
+                        <td>{productStock.unitPrice}</td>
+                      </tr>
+                      <tr>
+                        <th>Quantity</th>
+                        <td>{productStock.quantity}</td>
+                      </tr>
+                      <tr>
+                        <th>Currency</th>
+                        <td>{productStock.currency}</td>
+                      </tr>
+                      <tr>
+                        <th>Active</th>
+                        <td>{productStock.isActive ? 'Yes' : 'No'}</td>
+                      </tr>
+                      <tr>
+                        <th>Last Updated</th>
+                        <td>{productStock.lastUpdated?.replace('T', ' ').slice(0, 19)}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                ) : (
+                  <div>No product stock found.</div>
                 )}
               </Card.Body>
             </Card>
