@@ -10,7 +10,8 @@ export default function Footer() {
         bottom: 0,
         width: '100%',
         zIndex: 100,
-        background: '#222'
+        background: '#222',
+        pointerEvents: 'auto'
       }}
     >
       <div className="container">
@@ -48,3 +49,6 @@ export default function Footer() {
     </footer>
   );
 }
+
+// To prevent content being blocked, add padding-bottom to your main container:
+// Example: <Container className="mt-4 pb-5"> ... </Container>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Spinner, Alert, Table } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Alert, Table, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const USER_API = 'https://localhost:7226/api/Auth/me/guid';
 const BASKET_API = 'https://localhost:7226/api/Payment/orderbasket/by-user';
@@ -11,6 +12,7 @@ export default function OrderBasket() {
   const [basketLoading, setBasketLoading] = useState(false);
   const [error, setError] = useState('');
   const [basketError, setBasketError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -65,6 +67,10 @@ export default function OrderBasket() {
     };
     fetchBasket();
   }, [userId]);
+
+  const handleCheckout = () => {
+    navigate('/payment');
+  };
 
   return (
     <Container className="mt-4">
@@ -135,6 +141,11 @@ export default function OrderBasket() {
                       ) : (
                         <div>No items in basket.</div>
                       )}
+                      <div className="mt-4 text-end">
+                        <Button variant="success" onClick={handleCheckout}>
+                          CheckOut
+                        </Button>
+                      </div>
                     </>
                   ) : (
                     <div>No basket found.</div>

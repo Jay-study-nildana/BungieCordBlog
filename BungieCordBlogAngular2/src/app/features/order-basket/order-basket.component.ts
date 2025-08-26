@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 interface OrderBasketItem {
   id: string;
@@ -29,7 +30,11 @@ export class OrderBasketComponent implements OnInit {
   error = '';
   userId: string | null = null;
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {}
+  constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {}
+
+  goToPayment() {
+  this.router.navigate(['/payment']);
+}
 
   ngOnInit() {
     this.loading = true;

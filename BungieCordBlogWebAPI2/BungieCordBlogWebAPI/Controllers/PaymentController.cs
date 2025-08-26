@@ -1,7 +1,9 @@
 ﻿using BungieCordBlogWebAPI.Models.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 //Tables used in this controller. 
 
@@ -303,5 +305,158 @@ namespace BungieCordBlogWebAPI.Controllers
             if (!deleted) return NotFound();
             return NoContent();
         }
+
+        [HttpPost("complete-order")]
+        [Authorize]
+        public async Task<IActionResult> CompleteOrder(Guid UserId,Guid PaymentId)
+        {
+
+            //get all the items from the order basket
+            var basketId = (await paymentRepository.GetOrderBasketByuserGuidIdAsync(UserId))?.Id;
+
+            IEnumerable<OrderBasketItem> listofitems = await paymentRepository.GetOrderBasketItemsByBasketIdAsync((Guid)basketId);
+
+            //check if basket is empty
+
+            if (!listofitems.Any())
+            {
+                return BadRequest("Order basket is empty.");
+            }
+
+            // Create the order
+            var order = new Order
+            {
+                UserId = UserId,
+                PaymentId = PaymentId,
+                Status = OrderStatus.Processing,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            };
+
+            var createdOrder = await paymentRepository.AddOrderAsync(order);
+
+
+
+            // Copy all basket items to orderItems as DTOs
+            var orderItems = new List<OrderItemDto>(); ;
+            foreach (var basketItem in listofitems)
+            {
+                var orderItem = new OrderItem
+                {
+                    OrderId = createdOrder.Id,
+                    ProductId = basketItem.ProductId,
+                    Quantity = basketItem.Quantity,
+                    UnitPrice = basketItem.UnitPrice
+                };
+
+                var createdOrderItem = await paymentRepository.AddOrderItemAsync(orderItem);
+
+                orderItems.Add(new OrderItemDto
+                {
+                    Id = createdOrderItem.Id,
+                    OrderId = createdOrderItem.OrderId,
+                    ProductId = createdOrderItem.ProductId,
+                    Quantity = createdOrderItem.Quantity,
+                    UnitPrice = createdOrderItem.UnitPrice
+                });
+            }
+
+            //go through each item in the listofitems and delete them from the order basket
+
+            foreach (var basketItem in listofitems)
+            {
+                await paymentRepository.DeleteOrderBasketItemAsync(basketItem.Id);
+            }            
+
+            // Prepare response DTO
+            var responseDto = new OrderDto
+            {
+                Id = createdOrder.Id,
+                UserId = createdOrder.UserId,
+                PaymentId = createdOrder.PaymentId,
+                Status = createdOrder.Status,
+                CreatedDate = createdOrder.CreatedDate,
+                UpdatedDate = createdOrder.UpdatedDate,
+                Items = orderItems
+            };
+
+            return Ok(responseDto);
+        }
+
+        [HttpPost("payment")]
+        public async Task<IActionResult> AddPayment([FromBody] CreatePaymentDto dto)
+        {
+
+            var tempTransactionId = Guid.NewGuid().ToString(); // Simulate a transaction ID from a payment gateway  
+            tempTransactionId = tempTransactionId+"-"+ DateTime.UtcNow.Ticks.ToString(); // Make it more unique by appending ticks
+            var payment = new Payment
+            {
+                UserId = dto.UserId,
+                Amount = dto.Amount,
+                Method = dto.Method,
+                Status = dto.Status,
+                TransactionId = tempTransactionId,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            var created = await paymentRepository.AddPaymentAsync(payment);
+
+            var resultDto = new PaymentDto
+            {
+                Id = created.Id,
+                UserId = created.UserId,
+                Amount = created.Amount,
+                Method = created.Method,
+                Status = created.Status,
+                TransactionId = created.TransactionId,
+                CreatedDate = created.CreatedDate
+            };
+
+            return CreatedAtAction(nameof(AddPayment), new { id = resultDto.Id }, resultDto);
+        }
+
+
+
+        public class OrderItemDto
+        {
+            public Guid Id { get; set; }
+            public Guid OrderId { get; set; }
+            public Guid ProductId { get; set; }
+            public int Quantity { get; set; }
+            public decimal UnitPrice { get; set; }
+        }
+
+        public class OrderDto
+        {
+            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
+            public Guid PaymentId { get; set; }
+            public OrderStatus Status { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public DateTime UpdatedDate { get; set; }
+            public List<OrderItemDto> Items { get; set; }
+        }
+
+        public class CreatePaymentDto
+        {
+            public Guid UserId { get; set; }
+            public decimal Amount { get; set; }
+            public string Method { get; set; }
+            public PaymentStatus Status { get; set; }
+            public string TransactionId { get; set; }
+        }
+
+        public class PaymentDto
+        {
+            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
+            public decimal Amount { get; set; }
+            public string Method { get; set; }
+            public PaymentStatus Status { get; set; }
+            public string TransactionId { get; set; }
+            public DateTime CreatedDate { get; set; }
+        }
     }
+
+
 }

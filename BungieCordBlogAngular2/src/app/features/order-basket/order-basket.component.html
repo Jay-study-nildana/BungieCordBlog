@@ -23,7 +23,9 @@
             </li>
           </ul>
         </div>
-        <button class="btn btn-success mt-3" [disabled]="basket.items.length === 0">Checkout</button>
+        <button class="btn btn-success mt-3"
+        [disabled]="basket.items.length === 0"
+        (click)="goToPayment()">Checkout</button>
       </div>
     </div>
   </div>

@@ -67,4 +67,6 @@ public interface IPaymentRepository
     Task<bool> UserHasBasketAsync(Guid userGuid);
     Task CreateBasketForUserAsync(Guid userGuid);
     Task<OrderBasket> GetOrderBasketByuserGuidIdAsync(Guid userGuid);
+
+
 }

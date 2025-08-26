@@ -45,6 +45,16 @@ export class SuperHeroDetailsComponent implements OnInit {
   imageIndex = 0;
   productStock: ProductStock | null = null;
 
+  // Cart controls
+  quantity: number = 1;
+  cartLoading = false;
+  cartMessage: string = '';
+  cartSuccess: boolean = false;
+  showCartMessage = false;
+
+  // You may want to get these from a service or context
+  orderBasketId: string = '42012e9b-ebc9-4143-8fbb-a7a129ecd8df';
+
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
@@ -104,5 +114,42 @@ export class SuperHeroDetailsComponent implements OnInit {
     if (this.images.length > 0) {
       this.imageIndex = (this.imageIndex - 1 + this.images.length) % this.images.length;
     }
+  }
+
+  increaseQuantity() {
+    this.quantity++;
+  }
+
+  decreaseQuantity() {
+    if (this.quantity > 1) this.quantity--;
+  }
+
+  addToCart() {
+    if (!this.productStock) return;
+    this.cartLoading = true;
+    this.showCartMessage = false;
+    const payload = {
+      orderBasketId: this.orderBasketId,
+      productId: this.productStock.id,
+      quantity: this.quantity,
+      unitPrice: this.productStock.unitPrice
+    };
+    this.http.post('https://localhost:7226/api/Payment/orderbasketitem', payload)
+      .subscribe({
+        next: () => {
+          this.cartMessage = 'Added to cart successfully!';
+          this.cartSuccess = true;
+          this.showCartMessage = true;
+          this.cartLoading = false;
+          setTimeout(() => this.showCartMessage = false, 2000);
+        },
+        error: () => {
+          this.cartMessage = 'Failed to add to cart.';
+          this.cartSuccess = false;
+          this.showCartMessage = true;
+          this.cartLoading = false;
+          setTimeout(() => this.showCartMessage = false, 2000);
+        }
+      });
   }
 }

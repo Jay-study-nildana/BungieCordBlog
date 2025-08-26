@@ -1,0 +1,66 @@
+<div class="container my-5 text-center">
+  <h2>Payment Page</h2>
+  <div *ngIf="loading" class="my-3">
+    <span class="spinner-border"></span> Loading basket contents...
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="mb-3">
+    <h4>Total Amount: <span class="badge bg-primary">{{ totalAmount | currency }}</span></h4>
+  </div>
+  <!-- Hide form and button after payment -->
+  <ng-container *ngIf="!payResult">
+    <form class="mx-auto mb-3" style="max-width: 400px;" autocomplete="off" (ngSubmit)="pay()">
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" placeholder="Card Number" [(ngModel)]="cardNumber" name="cardNumber" required>
+      </div>
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" placeholder="Expiry (MM/YY)" [(ngModel)]="expiry" name="expiry" required>
+      </div>
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" placeholder="CVV" [(ngModel)]="cvv" name="cvv" required>
+      </div>
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" placeholder="Name on Card" [(ngModel)]="nameOnCard" name="nameOnCard" required>
+      </div>
+      <button type="button"
+              class="btn btn-primary"
+              [disabled]="!cardNumber || !expiry || !cvv || !nameOnCard || payLoading"
+              (click)="pay()">
+        {{ payLoading ? 'Processing...' : 'Pay' }}
+      </button>
+    </form>
+    <div *ngIf="payError" class="alert alert-danger">{{ payError }}</div>
+  </ng-container>
+  <div *ngIf="payResult && !completeOrderResult" class="alert alert-success">
+    <h5>Payment Successful!</h5>
+    <div><strong>Transaction ID:</strong> {{ payResult.transactionId }}</div>
+    <div><strong>Amount:</strong> {{ payResult.amount | currency }}</div>
+    <div><strong>Date:</strong> {{ payResult.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+    <button class="btn btn-success mt-3"
+            [disabled]="completeOrderLoading || timerActive"
+            (click)="confirmOrder()">
+      {{ completeOrderLoading ? 'Confirming...' : 'Confirm Order. Click Here' }}
+    </button>
+    <div *ngIf="timerActive" class="mt-2 text-warning">
+      Auto-confirming in {{ confirmTimer }} seconds...
+    </div>
+    <div *ngIf="completeOrderError" class="alert alert-danger mt-2">{{ completeOrderError }}</div>
+  </div>
+  <div *ngIf="completeOrderResult" class="alert alert-info mt-4">
+    <h5>Order Confirmed!</h5>
+    <div><strong>Order ID:</strong> {{ completeOrderResult.id }}</div>
+    <div><strong>Status:</strong> {{ completeOrderResult.status }}</div>
+    <div><strong>Created:</strong> {{ completeOrderResult.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+    <div><strong>Updated:</strong> {{ completeOrderResult.updatedDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+    <div class="mt-3">
+      <strong>Items:</strong>
+      <ul class="list-unstyled">
+        <li *ngFor="let item of completeOrderResult.items">
+          <strong>Product ID:</strong> {{ item.productId }} |
+          <strong>Quantity:</strong> {{ item.quantity }} |
+          <strong>Unit Price:</strong> {{ item.unitPrice | currency }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
