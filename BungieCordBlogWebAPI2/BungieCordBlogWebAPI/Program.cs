@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Description = "JWT Authorization header using the Bearer scheme. Just put the token in this box",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
@@ -65,6 +65,8 @@ builder.Services.AddScoped<ISuperPowerRepository, SuperPowerRepository>();
 builder.Services.AddScoped<ISidekickRepository, SidekickRepository>();
 builder.Services.AddScoped<IComicAppearanceRepository, ComicAppearanceRepository>();
 builder.Services.AddScoped<ISidekickComicAppearanceRepository, SidekickComicAppearanceRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IProductStockRepository, ProductStockRepository>();
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()

@@ -17,16 +17,22 @@ namespace BungieCordBlogWebAPI.Controllers
         private readonly ITokenRepository tokenRepository;
         private readonly RoleManager<IdentityRole> roleManager;
 
+        // Add this field to the controller
+        private readonly IPaymentRepository paymentRepository;
+
+        // Update the constructor to accept IPaymentRepository
         public AuthController(UserManager<IdentityUser> userManager,
             ITokenRepository tokenRepository,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IPaymentRepository paymentRepository)
         {
             this.userManager = userManager;
             this.tokenRepository = tokenRepository;
             this.roleManager = roleManager;
+            this.paymentRepository = paymentRepository;
         }
 
-        // POST: {apibaseurl}/api/auth/login
+        // In the Login method, after creating the response, check for basket and create if not exists
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
@@ -46,18 +52,39 @@ namespace BungieCordBlogWebAPI.Controllers
                     // Create a Token and Response
                     var jwtToken = tokenRepository.CreateJwtToken(identityUser, roles.ToList());
 
-                    var response = new LoginResponseDto()
+                    var response = new LogoResponseDto2()
                     {
                         Email = request.Email,
                         Roles = roles.ToList(),
-                        Token = jwtToken
+                        Token = jwtToken,
+                        OrderBasketId = Guid.Empty // Placeholder, will be set below if basket exists or is created
                     };
+
+                    // Check if the current user has a basket, if not, create one for them
+
+                    // Convert identityUser.Id (string) to Guid
+                    if (!Guid.TryParse(identityUser.Id, out var userGuid))
+                    {
+                        ModelState.AddModelError("", "Invalid user ID format.");
+                        return ValidationProblem(ModelState);
+                    }
+                    var hasBasket = await paymentRepository.UserHasBasketAsync(userGuid);
+                    if (!hasBasket)
+                    {
+                        await paymentRepository.CreateBasketForUserAsync(userGuid);
+                    }
+
+                    var orderBasket = await paymentRepository.GetOrderBasketByuserGuidIdAsync(userGuid);
+
+                    if(orderBasket != null)
+                    {
+                        response.OrderBasketId = orderBasket.Id;
+                    }
 
                     return Ok(response);
                 }
             }
             ModelState.AddModelError("", "Email or Password Incorrect");
-
 
             return ValidationProblem(ModelState);
         }
@@ -170,6 +197,28 @@ namespace BungieCordBlogWebAPI.Controllers
 
             return Ok(tokenDetails);
         }
+
+        [HttpGet("me/guid")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserId()
+        {
+            // Get the email from claims
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+                return Unauthorized("Email not found in token.");
+
+            // Find the user by email
+            var identityUser = await userManager.FindByEmailAsync(email);
+            if (identityUser == null)
+                return Unauthorized("User not found.");
+
+            // Convert identityUser.Id to Guid
+            if (!Guid.TryParse(identityUser.Id, out var userGuid))
+                return Unauthorized("User ID is not a valid GUID.");
+
+            return Ok(new { UserId = userGuid });
+        }
+
 
     }
 }

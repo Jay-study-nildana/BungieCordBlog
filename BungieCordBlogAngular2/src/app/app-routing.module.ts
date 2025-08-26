@@ -23,6 +23,8 @@ import { SidekickComicAppearanceComponent } from './features/sidekickcomicappear
 import { Home2Component } from './features/home2/home2.component';
 import { SuperHeroDetailsComponent } from './shared/components/super-hero-details/super-hero-details.component';
 import { SearchComponent } from './features/search/search.component';
+import { OrderBasketComponent } from './features/order-basket/order-basket.component';
+import { PaymentPageComponent } from './features/payment-page/payment-page.component';
 
 const routes: Routes = [
   {
@@ -109,6 +111,8 @@ const routes: Routes = [
   },
   { path: 'home2', component: Home2Component },
   { path: 'superhero/:id', component: SuperHeroDetailsComponent },
+  { path: 'order-basket', component: OrderBasketComponent },
+  { path: 'payment', component: PaymentPageComponent }, 
   { path: 'search', component: SearchComponent }
 ];
 

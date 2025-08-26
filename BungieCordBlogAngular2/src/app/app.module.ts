@@ -34,6 +34,8 @@ import { SidekickComicAppearanceComponent } from './features/sidekickcomicappear
 import { Home2Component } from './features/home2/home2.component';
 import { SuperHeroDetailsComponent } from './shared/components/super-hero-details/super-hero-details.component';
 import { SearchComponent } from './features/search/search.component';
+import { OrderBasketComponent } from "./features/order-basket/order-basket.component";
+import { PaymentPageComponent } from './features/payment-page/payment-page.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import { SearchComponent } from './features/search/search.component';
     Home2Component,
     SuperHeroDetailsComponent,
     SearchComponent,
+    OrderBasketComponent,
+    PaymentPageComponent,
   ],
   imports: [
     BrowserModule,

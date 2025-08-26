@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Card, Table, Button, Row, Col, Alert, Modal } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Card, Table, Button, Row, Col, Alert, Modal, Spinner } from 'react-bootstrap';
+
+const PRODUCT_STOCK_API = 'https://localhost:7226/api/ProductStock/by-superhero';
 
 export default function SuperHeroDetails({
   detailsHero,
@@ -12,6 +14,31 @@ export default function SuperHeroDetails({
   onClose
 }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [productStock, setProductStock] = useState(null);
+  const [stockLoading, setStockLoading] = useState(false);
+  const [stockError, setStockError] = useState('');
+
+useEffect(() => {
+  // Debug: log detailsHero
+  console.log('SuperHeroDetails detailsHero:', detailsHero);
+
+  if (!detailsHero || !detailsHero.id) return;
+  const fetchProductStock = async () => {
+    setStockLoading(true);
+    setStockError('');
+    try {
+      const res = await fetch(`${PRODUCT_STOCK_API}/${detailsHero.id}`);
+      if (!res.ok) throw new Error('Failed to fetch product stock');
+      const data = await res.json();
+      setProductStock(data);
+    } catch (err) {
+      setStockError('Error loading product stock');
+    } finally {
+      setStockLoading(false);
+    }
+  };
+  fetchProductStock();
+}, [detailsHero?.id]);
 
   const handleImageClick = (img) => {
     setSelectedImage(img);
@@ -24,7 +51,7 @@ export default function SuperHeroDetails({
   return (
     <Card className="mt-4 shadow-sm">
       <Card.Body>
-        <Card.Title as="h4">Super Hero Details</Card.Title>
+        <Card.Title as="h4">Super Hero Details - Admin View</Card.Title>
         {detailsLoading ? (
           <div className="text-center"><span className="spinner-border" /></div>
         ) : detailsError ? (
@@ -154,6 +181,48 @@ export default function SuperHeroDetails({
                   </Col>
                 ))}
               </Row>
+            )}
+            {/* Product Stock Section */}
+            <h5 className="mt-4">Product Stock</h5>
+            {stockLoading ? (
+              <div className="text-center"><Spinner animation="border" size="sm" /></div>
+            ) : stockError ? (
+              <Alert variant="danger">{stockError}</Alert>
+            ) : productStock ? (
+              <Table bordered>
+                <tbody>
+                  <tr>
+                    <th>SKU</th>
+                    <td>{productStock.sku}</td>
+                  </tr>
+                  <tr>
+                    <th>Description</th>
+                    <td>{productStock.description}</td>
+                  </tr>
+                  <tr>
+                    <th>Unit Price</th>
+                    <td>{productStock.unitPrice}</td>
+                  </tr>
+                  <tr>
+                    <th>Quantity</th>
+                    <td>{productStock.quantity}</td>
+                  </tr>
+                  <tr>
+                    <th>Currency</th>
+                    <td>{productStock.currency}</td>
+                  </tr>
+                  <tr>
+                    <th>Active</th>
+                    <td>{productStock.isActive ? 'Yes' : 'No'}</td>
+                  </tr>
+                  <tr>
+                    <th>Last Updated</th>
+                    <td>{productStock.lastUpdated?.replace('T', ' ').slice(0, 19)}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            ) : (
+              <div>No product stock found.</div>
             )}
             {/* Image Modal */}
             <Modal show={!!selectedImage} onHide={handleCloseImageModal} centered size="lg">

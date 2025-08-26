@@ -21,6 +21,14 @@ namespace BungieCordBlogWebAPI.Data
 
         public DbSet<SuperHeroImage> SuperHeroImages { get; set; }
 
+        public DbSet<OrderBasket> OrderBaskets { get; set; }
+        public DbSet<OrderBasketItem> OrderBasketItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+
+        public DbSet<ProductStock> ProductStocks { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
