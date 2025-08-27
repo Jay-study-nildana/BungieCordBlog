@@ -7,7 +7,7 @@ export default function BasketTable({ baskets }) {
     <>
       {baskets.map(basket => (
         <div key={basket.id} className="mb-4">
-          <h5>Basket ID: {basket.id}</h5>
+          {/* <h5>Basket ID: {basket.id}</h5> */}
           {/* <Table bordered size="sm">
             <thead>
               <tr>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BungieCordBlogWebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250826082902_MigrationProductStock")]
-    partial class MigrationProductStock
+    [Migration("20250827105822_MigrationAppDB")]
+    partial class MigrationAppDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

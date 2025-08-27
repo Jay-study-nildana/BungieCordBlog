@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 public class PaymentRepository : IPaymentRepository
 {
     private readonly ApplicationDbContext dbContext;
+    private readonly AuthDbContext authDbContext;
 
-    public PaymentRepository(ApplicationDbContext dbContext)
+    public PaymentRepository(ApplicationDbContext dbContext, AuthDbContext authDbContext)
     {
         this.dbContext = dbContext;
+        this.authDbContext = authDbContext;
     }
 
     // OrderBasket CRUD
@@ -237,5 +239,31 @@ public class PaymentRepository : IPaymentRepository
         return await dbContext.OrderBaskets
             .Include(b => b.Items)
             .FirstOrDefaultAsync(b => b.UserId == userGuid);
+    }
+
+    public async Task<string?> GetUserEmailByIdAsync(Guid userId)
+    {
+        // If your IdentityUser's Id is a string, convert Guid to string
+        var user = await authDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
+        return user?.Email;
+    }
+
+    public async Task<IEnumerable<Order>> GetOrdersByEmailAsync(string email)
+    {
+        // Find the user by email in the AuthDbContext
+        var user = await authDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+            return Enumerable.Empty<Order>();
+
+        // Convert user.Id (string) to Guid if needed
+        if (!Guid.TryParse(user.Id, out Guid userGuid))
+            return Enumerable.Empty<Order>();
+
+        // Fetch orders for this user
+        return await dbContext.Orders
+            .Include(o => o.Items)
+            .Include(o => o.Payment)
+            .Where(o => o.UserId == userGuid)
+            .ToListAsync();
     }
 }

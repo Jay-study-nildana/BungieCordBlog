@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { SuperPowerService } from '../../services/superpower.service';
 import { SidekickService } from '../../services/sidekick.service';
 import { SuperHeroImagesService } from '../../services/superheroimages.service';
@@ -30,6 +31,14 @@ interface ProductStock {
   lastUpdated: string;
 }
 
+interface OrderBasket {
+  id: string;
+  userId: string;
+  createdDate: string;
+  updatedDate: string;
+  items: any[];
+}
+
 @Component({
   selector: 'app-super-hero-details',
   templateUrl: './super-hero-details.component.html'
@@ -52,18 +61,47 @@ export class SuperHeroDetailsComponent implements OnInit {
   cartSuccess: boolean = false;
   showCartMessage = false;
 
-  // You may want to get these from a service or context
-  orderBasketId: string = '42012e9b-ebc9-4143-8fbb-a7a129ecd8df';
+  orderBasketId: string = '';
+  token: string = '';
+  userId: string = '';
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
+    private cookieService: CookieService,
     private powerService: SuperPowerService,
     private sidekickService: SidekickService,
     private imagesService: SuperHeroImagesService
   ) {}
 
   ngOnInit() {
+    // Get token from cookie
+    this.token = this.cookieService.get('Authorization');
+
+    // Get userId using token
+    if (this.token) {
+      const headers = new HttpHeaders().set('Authorization', this.token);
+      this.http.get<{ userId: string }>('https://localhost:7226/api/Auth/me/guid', { headers })
+        .subscribe({
+          next: (data) => {
+            this.userId = data.userId;
+            // Get orderBasketId using userId
+            this.http.get<OrderBasket>(`https://localhost:7226/api/Payment/orderbasket/by-user/${this.userId}`, { headers })
+              .subscribe({
+                next: (basket) => {
+                  this.orderBasketId = basket.id;
+                },
+                error: () => {
+                  this.orderBasketId = '';
+                }
+              });
+          },
+          error: () => {
+            this.userId = '';
+          }
+        });
+    }
+
     let id = this.superHeroId;
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -125,7 +163,7 @@ export class SuperHeroDetailsComponent implements OnInit {
   }
 
   addToCart() {
-    if (!this.productStock) return;
+    if (!this.productStock || !this.orderBasketId) return;
     this.cartLoading = true;
     this.showCartMessage = false;
     const payload = {

@@ -9,6 +9,12 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState(null);
 
+  // Orders state
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState('');
+  const [showOrders, setShowOrders] = useState(false);
+
   const handleCopy = async () => {
     if (token) {
       try {
@@ -44,6 +50,33 @@ export default function UserProfile() {
       })
       .finally(() => setLoading(false));
   }, [token]);
+
+  // Fetch orders by email
+  const fetchOrders = async () => {
+    if (!email) return;
+    setOrdersLoading(true);
+    setOrdersError('');
+    try {
+      const res = await fetch(`https://localhost:7226/api/Payment/orders/by-email?email=${encodeURIComponent(email)}`, {
+        headers: { 'accept': '*/*' }
+      });
+      if (!res.ok) throw new Error('Failed to fetch orders');
+      const data = await res.json();
+      setOrders(data);
+    } catch (err) {
+      setOrdersError('Could not fetch orders.');
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
+  // Toggle orders display
+  const handleToggleOrders = () => {
+    if (!showOrders) {
+      fetchOrders();
+    }
+    setShowOrders(prev => !prev);
+  };
 
   if (!token) {
     return (
@@ -122,6 +155,56 @@ export default function UserProfile() {
           </div>
         </div>
       )}
+
+      <div className="mb-4">
+        <button
+          className="btn btn-info"
+          onClick={handleToggleOrders}
+          disabled={ordersLoading}
+        >
+          {showOrders ? 'Hide Orders' : 'Show Orders'}
+        </button>
+      </div>
+
+      {showOrders && (
+        <div className="mb-4">
+          <h4>Your Orders</h4>
+          {ordersLoading && <div className="text-muted">Loading orders...</div>}
+          {ordersError && <div className="alert alert-danger">{ordersError}</div>}
+          {!ordersLoading && !ordersError && orders.length === 0 && (
+            <div className="alert alert-warning">No orders found.</div>
+          )}
+          {!ordersLoading && !ordersError && orders.length > 0 && (
+            <div className="table-responsive">
+              <table className="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Payment ID</th>
+                    <th>Status</th>
+                    <th>Status String</th>
+                    <th>Created Date</th>
+                    <th>Updated Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map(order => (
+                    <tr key={order.id}>
+                      <td>{order.id}</td>
+                      <td>{order.paymentId}</td>
+                      <td>{order.status}</td>
+                      <td>{order.statusString}</td>
+                      <td>{order.createdDate?.replace('T', ' ').slice(0, 19)}</td>
+                      <td>{order.updatedDate?.replace('T', ' ').slice(0, 19)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
       {copied && (
         <div
           style={{

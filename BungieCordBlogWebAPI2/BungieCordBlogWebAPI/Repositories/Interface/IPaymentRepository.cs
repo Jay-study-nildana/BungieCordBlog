@@ -68,5 +68,11 @@ public interface IPaymentRepository
     Task CreateBasketForUserAsync(Guid userGuid);
     Task<OrderBasket> GetOrderBasketByuserGuidIdAsync(Guid userGuid);
 
+    // Get user's email address by userId
+    Task<string?> GetUserEmailByIdAsync(Guid userId);
+
+    // Get all orders for a user by their email address
+    Task<IEnumerable<Order>> GetOrdersByEmailAsync(string email);
+
 
 }

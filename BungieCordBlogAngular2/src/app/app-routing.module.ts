@@ -25,6 +25,8 @@ import { SuperHeroDetailsComponent } from './shared/components/super-hero-detail
 import { SearchComponent } from './features/search/search.component';
 import { OrderBasketComponent } from './features/order-basket/order-basket.component';
 import { PaymentPageComponent } from './features/payment-page/payment-page.component';
+import { ProductStockComponent } from './features/product-stock/product-stock.component';
+import { AllOrdersComponent } from './features/all-orders/all-orders.component';
 
 const routes: Routes = [
   {
@@ -113,6 +115,8 @@ const routes: Routes = [
   { path: 'superhero/:id', component: SuperHeroDetailsComponent },
   { path: 'order-basket', component: OrderBasketComponent },
   { path: 'payment', component: PaymentPageComponent }, 
+  { path: 'productstock', component: ProductStockComponent },
+  { path: 'allorders', component: AllOrdersComponent },
   { path: 'search', component: SearchComponent }
 ];
 
