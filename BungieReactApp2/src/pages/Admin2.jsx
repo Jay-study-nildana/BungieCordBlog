@@ -54,6 +54,12 @@ export default function Admin2() {
                   <Link to="/sidekick-comic-appearance" className="btn btn-success">
                     Go to SideKick Comic Appearance
                   </Link>
+                  <Link to="/product-stock" className="btn btn-success">
+                    Go to Product Stock
+                  </Link>
+                  <Link to="/all-orders" className="btn btn-dark">
+                    Go To All Orders
+                  </Link>
                 </div>
               </Card.Text>
             </Card.Body>

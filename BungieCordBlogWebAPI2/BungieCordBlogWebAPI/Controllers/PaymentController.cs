@@ -415,7 +415,116 @@ namespace BungieCordBlogWebAPI.Controllers
             return CreatedAtAction(nameof(AddPayment), new { id = resultDto.Id }, resultDto);
         }
 
+        // GET: api/payment/order/{id}
+        [HttpGet("order/{id:guid}")]
+        public async Task<IActionResult> GetOrderById(Guid id)
+        {
+            var order = await paymentRepository.GetOrderByIdAsync(id);
+            if (order == null) return NotFound();
 
+            //var items = order.Items?.Select(i => new OrderItemDto
+            //{
+            //    Id = i.Id,
+            //    OrderId = i.OrderId,
+            //    ProductId = i.ProductId,
+            //    Quantity = i.Quantity,
+            //    UnitPrice = i.UnitPrice
+            //}).ToList() ?? new List<OrderItemDto>();
+
+            var email = await paymentRepository.GetUserEmailByIdAsync(order.UserId);
+
+            var dto = new OrderDto2
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                Email = email,
+                PaymentId = order.PaymentId,
+                Status = order.Status,
+                CreatedDate = order.CreatedDate,
+                UpdatedDate = order.UpdatedDate,
+                StatusString = order.Status.ToString()
+                //Items = items
+            };
+
+            return Ok(dto);
+        }
+
+        // GET: api/payment/orders
+        [HttpGet("orders")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await paymentRepository.GetAllOrdersAsync();
+            var dtos = new List<OrderDto2>();
+
+            foreach (var order in orders)
+            {
+                var email = await paymentRepository.GetUserEmailByIdAsync(order.UserId);
+
+                var dto = new OrderDto2
+                {
+                    Id = order.Id,
+                    UserId = order.UserId,
+                    Email = email,
+                    PaymentId = order.PaymentId,
+                    Status = order.Status,
+                    CreatedDate = order.CreatedDate,
+                    UpdatedDate = order.UpdatedDate,
+                    StatusString = order.Status.ToString()
+                    //Items = order.Items?.Select(i => new OrderItemDto
+                    //{
+                    //    Id = i.Id,
+                    //    OrderId = i.OrderId,
+                    //    ProductId = i.ProductId,
+                    //    Quantity = i.Quantity,
+                    //    UnitPrice = i.UnitPrice
+                    //}).ToList() ?? new List<OrderItemDto>()
+                };
+
+                dtos.Add(dto);
+            }
+
+            return Ok(dtos);
+        }
+
+        // PUT: api/payment/order/{id}
+        [HttpPut("order/{id:guid}")]
+        public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] UpdateOrderDto dto)
+        {
+            var existingOrder = await paymentRepository.GetOrderByIdAsync(id);
+            if (existingOrder == null) return NotFound();
+
+            existingOrder.Status = (OrderStatus)dto.Status;
+            existingOrder.UpdatedDate = DateTime.UtcNow;
+
+            var updated = await paymentRepository.UpdateOrderAsync(id, existingOrder);
+            if (updated == null) return NotFound();
+
+            return Ok(new { updated.Id, updated.Status });
+        }
+
+        // GET: api/payment/orders/by-email?email=someone@example.com
+        [HttpGet("orders/by-email")]
+        public async Task<IActionResult> GetOrdersByEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest("Email is required.");
+
+            var orders = await paymentRepository.GetOrdersByEmailAsync(email);
+            var dtos = orders.Select(order => new OrderDto2
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                Email = email,
+                PaymentId = order.PaymentId,
+                Status = order.Status,
+                CreatedDate = order.CreatedDate,
+                UpdatedDate = order.UpdatedDate,
+                StatusString = order.Status.ToString()
+                // Items can be added if needed
+            }).ToList();
+
+            return Ok(dtos);
+        }
 
         public class OrderItemDto
         {
@@ -455,6 +564,32 @@ namespace BungieCordBlogWebAPI.Controllers
             public PaymentStatus Status { get; set; }
             public string TransactionId { get; set; }
             public DateTime CreatedDate { get; set; }
+        }
+
+        public class UpdateOrderDto
+        {
+            //I realised I don't need to update UserId or PaymentId for an order. Only status can be updated.
+            //public Guid UserId { get; set; }
+            //public Guid PaymentId { get; set; }
+            public int Status { get; set; }
+        }
+
+        public class OrderDto2
+        {
+            public Guid Id { get; set; }
+            public Guid UserId { get; set; }
+            public string? Email { get; set; } // <-- Add this line
+            public Guid PaymentId { get; set; }
+            public OrderStatus Status { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public DateTime UpdatedDate { get; set; }
+
+            //string related to order status
+
+            public string StatusString { get; set; }
+
+            //no need for items right now. we can get it later if we want.
+            //public List<OrderItemDto> Items { get; set; }
         }
     }
 

@@ -36,6 +36,8 @@ import { SuperHeroDetailsComponent } from './shared/components/super-hero-detail
 import { SearchComponent } from './features/search/search.component';
 import { OrderBasketComponent } from "./features/order-basket/order-basket.component";
 import { PaymentPageComponent } from './features/payment-page/payment-page.component';
+import { ProductStockComponent } from './features/product-stock/product-stock.component';
+import { AllOrdersComponent } from './features/all-orders/all-orders.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,8 @@ import { PaymentPageComponent } from './features/payment-page/payment-page.compo
     SearchComponent,
     OrderBasketComponent,
     PaymentPageComponent,
+    ProductStockComponent,
+    AllOrdersComponent,
   ],
   imports: [
     BrowserModule,

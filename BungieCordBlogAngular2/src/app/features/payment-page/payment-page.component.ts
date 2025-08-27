@@ -78,28 +78,44 @@ export class PaymentPageComponent implements OnInit {
 
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-  ngOnInit() {
-    this.loading = true;
-    const token = this.cookieService.get('Authorization');
+ngOnInit() {
+  this.loading = true;
+  const token = this.cookieService.get('Authorization');
 
-    this.http.get<OrderBasket[]>('https://localhost:7226/api/Payment/orderbaskets', {
-      headers: {
-        'accept': '*/*',
-        'Authorization': `${token}`
-      }
-    }).subscribe({
-      next: (data) => {
-        this.baskets = data;
-        this.totalAmount = this.calculateTotal(data);
-        this.userId = data.length > 0 ? data[0].userId : '';
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Could not load basket contents.';
-        this.loading = false;
-      }
-    });
-  }
+  // Get userId using token
+  this.http.get<{ userId: string }>('https://localhost:7226/api/Auth/me/guid', {
+    headers: {
+      'accept': '*/*',
+      'Authorization': `${token}`
+    }
+  }).subscribe({
+    next: (data) => {
+      this.userId = data.userId;
+
+      // Now load order baskets
+      this.http.get<OrderBasket[]>('https://localhost:7226/api/Payment/orderbaskets', {
+        headers: {
+          'accept': '*/*',
+          'Authorization': `${token}`
+        }
+      }).subscribe({
+        next: (baskets) => {
+          this.baskets = baskets;
+          this.totalAmount = this.calculateTotal(baskets);
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Could not load basket contents.';
+          this.loading = false;
+        }
+      });
+    },
+    error: () => {
+      this.error = 'Could not get userId.';
+      this.loading = false;
+    }
+  });
+}
 
   calculateTotal(baskets: OrderBasket[]): number {
     let sum = 0;
