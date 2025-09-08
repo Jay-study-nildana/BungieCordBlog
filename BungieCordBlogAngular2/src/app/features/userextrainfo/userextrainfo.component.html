@@ -1,0 +1,77 @@
+<div class="container my-5">
+  <h2 class="text-center mb-4">User Extra Info</h2>
+  <button class="btn btn-success mb-3" (click)="newInfo()">Add New User</button>
+  <div *ngIf="loading" class="text-center my-3">
+    <span class="spinner-border"></span> Loading...
+  </div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+  <table class="table table-bordered table-striped" *ngIf="infos.length > 0">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Full Name</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Address</th>
+        <th>Active</th>
+        <th>Profile Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let info of infos">
+        <td>{{ info.email }}</td>
+        <td>{{ info.fullName }}</td>
+        <td>{{ info.phoneNumber }}</td>
+        <td>{{ info.role }}</td>
+        <td>{{ info.address }}</td>
+        <td>{{ info.isActive ? 'Yes' : 'No' }}</td>
+        <td>
+          <img *ngIf="info.profileImageUrl" [src]="info.profileImageUrl" alt="Profile" style="width:40px;height:40px;">
+        </td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="selectInfo(info)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteInfo(info.id ?? '')">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selectedInfo" class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title">{{ isEditing ? 'Edit' : 'Add' }} User Extra Info</h5>
+      <form (ngSubmit)="saveInfo()" #infoForm="ngForm">
+        <div class="mb-3">
+          <label>Email</label>
+          <input class="form-control" [(ngModel)]="selectedInfo.email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label>Full Name</label>
+          <input class="form-control" [(ngModel)]="selectedInfo.fullName" name="fullName" required>
+        </div>
+        <div class="mb-3">
+          <label>Phone Number</label>
+          <input class="form-control" [(ngModel)]="selectedInfo.phoneNumber" name="phoneNumber">
+        </div>
+        <div class="mb-3">
+          <label>Role</label>
+          <input class="form-control" [(ngModel)]="selectedInfo.role" name="role">
+        </div>
+        <div class="mb-3">
+          <label>Address</label>
+          <input class="form-control" [(ngModel)]="selectedInfo.address" name="address">
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" [(ngModel)]="selectedInfo.isActive" name="isActive">
+          <label class="form-check-label">Active</label>
+        </div>
+        <div class="mb-3">
+          <label>Profile Image URL</label>
+          <input class="form-control" [(ngModel)]="selectedInfo.profileImageUrl" name="profileImageUrl">
+        </div>
+        <button type="submit" class="btn btn-success me-2">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>

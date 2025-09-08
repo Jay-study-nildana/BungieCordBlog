@@ -29,6 +29,8 @@ namespace BungieCordBlogWebAPI.Data
 
         public DbSet<ProductStock> ProductStocks { get; set; }
 
+        public DbSet<User_Extra_Info> User_Extra_Infos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

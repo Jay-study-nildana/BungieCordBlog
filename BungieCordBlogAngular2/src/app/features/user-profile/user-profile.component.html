@@ -1,23 +1,32 @@
 <div class="container mt-5">
   <div class="col-12 col-md-6 col-lg-4 mx-auto">
-    <h1>User Profile</h1>
-    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-    <div *ngIf="profile">
-      <p><strong>Email:</strong> {{ profile.email }}</p>
-      <p><strong>Roles:</strong> {{ profile.roles.join(', ') }}</p>
-      <p><strong>Issuer:</strong> {{ profile.issuer }}</p>
-      <p><strong>Audience:</strong> {{ profile.audience.join(', ') }}</p>
-      <p><strong>Expiry:</strong> {{ profile.expiry | date:'medium' }}</p>
-      <div>
-        <strong>Token:</strong>
-        <pre class="bg-light p-2 mb-2" style="white-space: pre-wrap; word-break: break-all;">{{ token }}</pre>
-        <button class="btn btn-sm btn-outline-secondary" (click)="copyToken()">Copy</button>
-        <span *ngIf="copied" class="ms-2 text-success">Copied!</span>
+    <button class="btn btn-secondary mb-3" (click)="toggleProfile()">
+      {{ profileVisible ? 'Hide User Profile' : 'Show User Profile' }}
+    </button>
+    <div *ngIf="profileVisible">
+      <h1>User Profile</h1>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="profile">
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+        <p><strong>Roles:</strong> {{ profile.roles.join(', ') }}</p>
+        <p><strong>Issuer:</strong> {{ profile.issuer }}</p>
+        <p><strong>Audience:</strong> {{ profile.audience.join(', ') }}</p>
+        <p><strong>Expiry:</strong> {{ profile.expiry | date:'medium' }}</p>
+        <div>
+          <strong>Token:</strong>
+          <pre class="bg-light p-2 mb-2" style="white-space: pre-wrap; word-break: break-all;">{{ token }}</pre>
+          <button class="btn btn-sm btn-outline-secondary" (click)="copyToken()">Copy</button>
+          <span *ngIf="copied" class="ms-2 text-success">Copied!</span>
+        </div>
+        <!-- Show/Hide Orders Button -->
+        <button class="btn btn-primary mt-3" (click)="toggleOrders()">
+          {{ ordersVisible ? 'Hide Orders' : 'Show Orders' }}
+        </button>
+        <!-- Toggle Extra User Info Button -->
+        <button class="btn btn-info mt-3 ms-2" (click)="toggleExtraUserInfo()">
+          {{ extraUserInfoVisible ? 'Hide Extra User Info' : 'Show Extra User Info' }}
+        </button>
       </div>
-      <!-- Show/Hide Orders Button -->
-      <button class="btn btn-primary mt-3" (click)="toggleOrders()">
-        {{ ordersVisible ? 'Hide Orders' : 'Show Orders' }}
-      </button>
     </div>
   </div>
 
@@ -48,6 +57,74 @@
     </table>
     <div *ngIf="!ordersLoading && orders.length === 0" class="alert alert-info mt-3">
       No orders found.
+    </div>
+  </div>
+
+  <!-- Extra User Info Section -->
+  <div class="col-12 col-md-8 col-lg-6 mx-auto mt-5" *ngIf="extraUserInfoVisible">
+    <div *ngIf="extraUserInfoLoading">
+      <span class="spinner-border spinner-border-sm"></span> Loading extra user info...
+    </div>
+    <div *ngIf="extraUserInfoError">
+      <div class="alert alert-danger">{{ extraUserInfoError }}</div>
+    </div>
+    <div *ngIf="extraUserInfo">
+      <h2>Extra User Info</h2>
+      <form (ngSubmit)="updateExtraUserInfo()" #extraUserInfoForm="ngForm">
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <th>Email</th>
+              <td>{{ extraUserInfo.email }}</td>
+            </tr>
+            <tr>
+              <th>Full Name</th>
+              <td>
+                <input class="form-control" [(ngModel)]="extraUserInfo.fullName" name="fullName" required>
+              </td>
+            </tr>
+            <tr>
+              <th>Phone Number</th>
+              <td>
+                <input class="form-control" [(ngModel)]="extraUserInfo.phoneNumber" name="phoneNumber">
+              </td>
+            </tr>
+            <tr>
+              <th>Role</th>
+              <td>
+                <input class="form-control" [(ngModel)]="extraUserInfo.role" name="role">
+              </td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td>
+                <input class="form-control" [(ngModel)]="extraUserInfo.address" name="address">
+              </td>
+            </tr>
+            <tr>
+              <th>Registered Date</th>
+              <td>{{ extraUserInfo.registeredDate | date:'medium' }}</td>
+            </tr>
+            <tr>
+              <th>Active</th>
+              <td>
+                <input type="checkbox" class="form-check-input" [(ngModel)]="extraUserInfo.isActive" name="isActive">
+                <label class="form-check-label ms-2">{{ extraUserInfo.isActive ? 'Yes' : 'No' }}</label>
+              </td>
+            </tr>
+            <!-- <tr>
+              <th>Profile Image</th>
+              <td>
+                <input class="form-control mb-2" [(ngModel)]="extraUserInfo.profileImageUrl" name="profileImageUrl">
+                <img *ngIf="extraUserInfo.profileImageUrl" [src]="extraUserInfo.profileImageUrl" alt="Profile" style="width:60px;height:60px;">
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
+        <button type="submit" class="btn btn-success me-2" [disabled]="extraUserInfoUpdating">Update</button>
+        <span *ngIf="extraUserInfoUpdateError" class="text-danger ms-2">{{ extraUserInfoUpdateError }}</span>
+        <span *ngIf="extraUserInfoUpdateSuccess" class="text-success ms-2">Updated!</span>
+      </form>
     </div>
   </div>
 </div>

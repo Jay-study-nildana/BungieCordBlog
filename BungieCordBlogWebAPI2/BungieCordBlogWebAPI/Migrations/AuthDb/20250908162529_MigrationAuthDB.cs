@@ -170,7 +170,7 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "f3d378fd-e54d-5f4c-9219-b2b2f92a017e", 0, "7ef11476-1fcc-4aed-8fca-bce1b8926735", "admin@BungieCordBlog.com", false, false, null, "ADMIN@BUNGIECORDBLOG.COM", "ADMIN@BUNGIECORDBLOG.COM", "AQAAAAIAAYagAAAAEOpoEXaLKBtyMUXXSXs+UAPCfnmxPDC998sCajqZjErJDKG0/kMk3jjFwr4QSaHpbQ==", null, false, "6726031b-35f2-4111-8fb0-d0e39f2eb828", false, "admin@BungieCordBlog.com" });
+                values: new object[] { "f3d378fd-e54d-5f4c-9219-b2b2f92a017e", 0, "3d17575c-c6a7-409d-9957-9d808c25932e", "admin@BungieCordBlog.com", false, false, null, "ADMIN@BUNGIECORDBLOG.COM", "ADMIN@BUNGIECORDBLOG.COM", "AQAAAAIAAYagAAAAEKmIsjrolAlGHmC8NquiHIUb2IlWtmcu6y5X5A9C+y9p//jIGZMEUzHku7eItNbQng==", null, false, "c13eeee4-6b24-4eb0-8ec8-ba393954e393", false, "admin@BungieCordBlog.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

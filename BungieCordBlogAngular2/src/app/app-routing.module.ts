@@ -27,6 +27,7 @@ import { OrderBasketComponent } from './features/order-basket/order-basket.compo
 import { PaymentPageComponent } from './features/payment-page/payment-page.component';
 import { ProductStockComponent } from './features/product-stock/product-stock.component';
 import { AllOrdersComponent } from './features/all-orders/all-orders.component';
+import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.component';
 
 const routes: Routes = [
   {
@@ -117,6 +118,7 @@ const routes: Routes = [
   { path: 'payment', component: PaymentPageComponent }, 
   { path: 'productstock', component: ProductStockComponent },
   { path: 'allorders', component: AllOrdersComponent },
+  { path: 'userextrainfo', component: UserextrainfoComponent },
   { path: 'search', component: SearchComponent }
 ];
 

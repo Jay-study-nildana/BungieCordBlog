@@ -159,15 +159,15 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
                         {
                             Id = "f3d378fd-e54d-5f4c-9219-b2b2f92a017e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7ef11476-1fcc-4aed-8fca-bce1b8926735",
+                            ConcurrencyStamp = "3d17575c-c6a7-409d-9957-9d808c25932e",
                             Email = "admin@BungieCordBlog.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@BUNGIECORDBLOG.COM",
                             NormalizedUserName = "ADMIN@BUNGIECORDBLOG.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOpoEXaLKBtyMUXXSXs+UAPCfnmxPDC998sCajqZjErJDKG0/kMk3jjFwr4QSaHpbQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKmIsjrolAlGHmC8NquiHIUb2IlWtmcu6y5X5A9C+y9p//jIGZMEUzHku7eItNbQng==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6726031b-35f2-4111-8fb0-d0e39f2eb828",
+                            SecurityStamp = "c13eeee4-6b24-4eb0-8ec8-ba393954e393",
                             TwoFactorEnabled = false,
                             UserName = "admin@BungieCordBlog.com"
                         });

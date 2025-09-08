@@ -125,6 +125,25 @@ namespace BungieCordBlogWebAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "User_Extra_Infos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegisteredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User_Extra_Infos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BlogPostCategory",
                 columns: table => new
                 {
@@ -395,6 +414,9 @@ namespace BungieCordBlogWebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "SuperPowers");
+
+            migrationBuilder.DropTable(
+                name: "User_Extra_Infos");
 
             migrationBuilder.DropTable(
                 name: "BlogPosts");
