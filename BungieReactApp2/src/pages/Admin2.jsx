@@ -60,6 +60,9 @@ export default function Admin2() {
                   <Link to="/all-orders" className="btn btn-dark">
                     Go To All Orders
                   </Link>
+                  <Link to="/user-extra-info" className="btn btn-outline-info">
+                    Go to User Extra Info
+                  </Link>
                 </div>
               </Card.Text>
             </Card.Body>

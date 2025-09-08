@@ -1,11 +1,14 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using BungieCordBlogWebAPI.Models.Domain;
 using BungieCordBlogWebAPI.Models.DTO;
+using BungieCordBlogWebAPI.Repositories;
+using BungieCordBlogWebAPI.Repositories.Implementation;
 using BungieCordBlogWebAPI.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BungieCordBlogWebAPI.Controllers
 {
@@ -16,6 +19,7 @@ namespace BungieCordBlogWebAPI.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly ITokenRepository tokenRepository;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IUserExtraInfoRepository userExtraInfoRepository;
 
         // Add this field to the controller
         private readonly IPaymentRepository paymentRepository;
@@ -24,12 +28,14 @@ namespace BungieCordBlogWebAPI.Controllers
         public AuthController(UserManager<IdentityUser> userManager,
             ITokenRepository tokenRepository,
             RoleManager<IdentityRole> roleManager,
-            IPaymentRepository paymentRepository)
+            IPaymentRepository paymentRepository,
+            IUserExtraInfoRepository userExtraInfoRepository)
         {
             this.userManager = userManager;
             this.tokenRepository = tokenRepository;
             this.roleManager = roleManager;
             this.paymentRepository = paymentRepository;
+            this.userExtraInfoRepository = userExtraInfoRepository;
         }
 
         // In the Login method, after creating the response, check for basket and create if not exists
@@ -112,6 +118,23 @@ namespace BungieCordBlogWebAPI.Controllers
 
                 if (identityResult.Succeeded)
                 {
+
+                    //I need to add the new user that is created into the User_Extra_Info table
+
+                    var user_extra_info = new User_Extra_Info();
+                    user_extra_info.Id = Guid.NewGuid();
+                    user_extra_info.Email = request.Email;
+                    user_extra_info.Address = string.Empty;
+                    user_extra_info.FullName = string.Empty;
+                    user_extra_info.PhoneNumber = string.Empty;
+                    user_extra_info.Role = "Reader";
+                    user_extra_info.RegisteredDate = DateTime.UtcNow;
+                    user_extra_info.IsActive = true;
+                    user_extra_info.ProfileImageUrl = string.Empty;
+
+
+                    var created = await userExtraInfoRepository.AddAsync(user_extra_info);
+
                     return Ok();
                 }
                 else

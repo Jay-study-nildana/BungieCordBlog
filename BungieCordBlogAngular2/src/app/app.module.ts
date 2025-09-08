@@ -38,6 +38,7 @@ import { OrderBasketComponent } from "./features/order-basket/order-basket.compo
 import { PaymentPageComponent } from './features/payment-page/payment-page.component';
 import { ProductStockComponent } from './features/product-stock/product-stock.component';
 import { AllOrdersComponent } from './features/all-orders/all-orders.component';
+import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { AllOrdersComponent } from './features/all-orders/all-orders.component';
     PaymentPageComponent,
     ProductStockComponent,
     AllOrdersComponent,
+    UserextrainfoComponent,
   ],
   imports: [
     BrowserModule,

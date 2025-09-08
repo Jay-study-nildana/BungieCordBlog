@@ -1,4 +1,5 @@
 using BungieCordBlogWebAPI.Data;
+using BungieCordBlogWebAPI.Repositories;
 using BungieCordBlogWebAPI.Repositories.Implementation;
 using BungieCordBlogWebAPI.Repositories.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,6 +68,7 @@ builder.Services.AddScoped<IComicAppearanceRepository, ComicAppearanceRepository
 builder.Services.AddScoped<ISidekickComicAppearanceRepository, SidekickComicAppearanceRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IProductStockRepository, ProductStockRepository>();
+builder.Services.AddScoped<IUserExtraInfoRepository, UserExtraInfoRepository>();
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
