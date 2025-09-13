@@ -1,66 +1,129 @@
-<div class="container my-5 text-center">
-  <h2>Payment Page</h2>
-  <div *ngIf="loading" class="my-3">
-    <span class="spinner-border"></span> Loading basket contents...
-  </div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div class="mb-3">
-    <h4>Total Amount: <span class="badge bg-primary">{{ totalAmount | currency }}</span></h4>
-  </div>
-  <!-- Hide form and button after payment -->
-  <ng-container *ngIf="!payResult">
-    <form class="mx-auto mb-3" style="max-width: 400px;" autocomplete="off" (ngSubmit)="pay()">
-      <div class="form-group mb-2">
-        <input type="text" class="form-control" placeholder="Card Number" [(ngModel)]="cardNumber" name="cardNumber" required>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-body px-4 py-5">
+          <h2 class="card-title text-center text-primary mb-4">
+            <i class="bi bi-credit-card-2-front-fill me-2"></i>Payment
+          </h2>
+          <div *ngIf="loading" class="my-4 text-center">
+            <span class="spinner-border text-primary"></span>
+            <div class="mt-2 fs-5 text-primary">Loading basket contents...</div>
+          </div>
+          <div *ngIf="error" class="alert alert-danger text-center fs-5">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+          </div>
+          <div class="mb-3 text-center">
+            <h4>Total Amount: 
+              <span class="badge bg-primary fs-4">
+                {{ totalAmount | currency }}
+              </span>
+            </h4>
+            <div *ngIf="totalAmount === 0" class="alert alert-warning mt-2">
+              <i class="bi bi-info-circle me-2"></i>
+              You have no items to pay for. The Pay button is disabled.
+            </div>
+          </div>
+          <!-- Hide form and button after payment -->
+          <ng-container *ngIf="!payResult">
+            <form class="mx-auto mb-3" style="max-width: 400px;" autocomplete="off" (ngSubmit)="pay()" #paymentForm="ngForm" novalidate>
+              <div class="form-group mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-credit-card me-2"></i>Card Number
+                </label>
+                <input type="text" class="form-control" placeholder="1234 5678 9012 3456"
+                  [(ngModel)]="cardNumber" name="cardNumber" required
+                  pattern="^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$"
+                  maxlength="19"
+                  [ngClass]="{'is-invalid': paymentForm.submitted && !cardNumberValid()}">
+                <div class="invalid-feedback">
+                  Please enter a valid credit card number.
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-calendar me-2"></i>Expiry (MM/YY)
+                </label>
+                <input type="text" class="form-control" placeholder="MM/YY"
+                  [(ngModel)]="expiry" name="expiry" required
+                  pattern="^(0[1-9]|1[0-2])\/?([0-9]{2})$"
+                  maxlength="5"
+                  [ngClass]="{'is-invalid': paymentForm.submitted && !expiryValid()}">
+                <div class="invalid-feedback">
+                  Please enter a valid expiry date (MM/YY).
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-shield-lock me-2"></i>CVV
+                </label>
+                <input type="text" class="form-control" placeholder="CVV"
+                  [(ngModel)]="cvv" name="cvv" required
+                  pattern="^[0-9]{3,4}$"
+                  maxlength="4"
+                  [ngClass]="{'is-invalid': paymentForm.submitted && !cvvValid()}">
+                <div class="invalid-feedback">
+                  Please enter a valid CVV.
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label fw-bold">
+                  <i class="bi bi-person me-2"></i>Name on Card
+                </label>
+                <input type="text" class="form-control" placeholder="Name on Card"
+                  [(ngModel)]="nameOnCard" name="nameOnCard" required
+                  pattern="^[a-zA-Z ]{2,}$"
+                  maxlength="40"
+                  [ngClass]="{'is-invalid': paymentForm.submitted && !nameOnCardValid()}">
+                <div class="invalid-feedback">
+                  Please enter the name as shown on your card.
+                </div>
+              </div>
+              <button type="submit"
+                      class="btn btn-primary btn-lg w-100"
+                      [disabled]="!formValid() || payLoading || totalAmount === 0">
+                <i class="bi bi-lock me-2"></i>
+                {{ payLoading ? 'Processing...' : 'Pay Securely' }}
+              </button>
+            </form>
+            <div *ngIf="payError" class="alert alert-danger text-center">{{ payError }}</div>
+          </ng-container>
+          <div *ngIf="payResult && !completeOrderResult" class="alert alert-success text-center">
+            <h5><i class="bi bi-check-circle-fill me-2"></i>Payment Successful!</h5>
+            <div><strong>Transaction ID:</strong> {{ payResult.transactionId }}</div>
+            <div><strong>Amount:</strong> {{ payResult.amount | currency }}</div>
+            <div><strong>Date:</strong> {{ payResult.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+            <button class="btn btn-success mt-3"
+                    [disabled]="completeOrderLoading || timerActive"
+                    (click)="confirmOrder()">
+              <i class="bi bi-check2-circle me-2"></i>
+              {{ completeOrderLoading ? 'Confirming...' : 'Confirm Order. Click Here' }}
+            </button>
+            <div *ngIf="timerActive" class="mt-2 text-warning">
+              <i class="bi bi-clock-history me-2"></i>
+              Auto-confirming in {{ confirmTimer }} seconds...
+            </div>
+            <div *ngIf="completeOrderError" class="alert alert-danger mt-2">{{ completeOrderError }}</div>
+          </div>
+          <div *ngIf="completeOrderResult" class="alert alert-info mt-4 text-center">
+            <h5><i class="bi bi-bag-check-fill me-2"></i>Order Confirmed!</h5>
+            <div><strong>Order ID:</strong> {{ completeOrderResult.id }}</div>
+            <div><strong>Status:</strong> {{ completeOrderResult.status }}</div>
+            <div><strong>Created:</strong> {{ completeOrderResult.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+            <div><strong>Updated:</strong> {{ completeOrderResult.updatedDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+            <div class="mt-3">
+              <strong>Items:</strong>
+              <ul class="list-unstyled">
+                <li *ngFor="let item of completeOrderResult.items">
+                  <strong>Product ID:</strong> {{ item.productId }} |
+                  <strong>Quantity:</strong> {{ item.quantity }} |
+                  <strong>Unit Price:</strong> {{ item.unitPrice | currency }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="form-group mb-2">
-        <input type="text" class="form-control" placeholder="Expiry (MM/YY)" [(ngModel)]="expiry" name="expiry" required>
-      </div>
-      <div class="form-group mb-2">
-        <input type="text" class="form-control" placeholder="CVV" [(ngModel)]="cvv" name="cvv" required>
-      </div>
-      <div class="form-group mb-2">
-        <input type="text" class="form-control" placeholder="Name on Card" [(ngModel)]="nameOnCard" name="nameOnCard" required>
-      </div>
-      <button type="button"
-              class="btn btn-primary"
-              [disabled]="!cardNumber || !expiry || !cvv || !nameOnCard || payLoading"
-              (click)="pay()">
-        {{ payLoading ? 'Processing...' : 'Pay' }}
-      </button>
-    </form>
-    <div *ngIf="payError" class="alert alert-danger">{{ payError }}</div>
-  </ng-container>
-  <div *ngIf="payResult && !completeOrderResult" class="alert alert-success">
-    <h5>Payment Successful!</h5>
-    <div><strong>Transaction ID:</strong> {{ payResult.transactionId }}</div>
-    <div><strong>Amount:</strong> {{ payResult.amount | currency }}</div>
-    <div><strong>Date:</strong> {{ payResult.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
-    <button class="btn btn-success mt-3"
-            [disabled]="completeOrderLoading || timerActive"
-            (click)="confirmOrder()">
-      {{ completeOrderLoading ? 'Confirming...' : 'Confirm Order. Click Here' }}
-    </button>
-    <div *ngIf="timerActive" class="mt-2 text-warning">
-      Auto-confirming in {{ confirmTimer }} seconds...
-    </div>
-    <div *ngIf="completeOrderError" class="alert alert-danger mt-2">{{ completeOrderError }}</div>
-  </div>
-  <div *ngIf="completeOrderResult" class="alert alert-info mt-4">
-    <h5>Order Confirmed!</h5>
-    <div><strong>Order ID:</strong> {{ completeOrderResult.id }}</div>
-    <div><strong>Status:</strong> {{ completeOrderResult.status }}</div>
-    <div><strong>Created:</strong> {{ completeOrderResult.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
-    <div><strong>Updated:</strong> {{ completeOrderResult.updatedDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
-    <div class="mt-3">
-      <strong>Items:</strong>
-      <ul class="list-unstyled">
-        <li *ngFor="let item of completeOrderResult.items">
-          <strong>Product ID:</strong> {{ item.productId }} |
-          <strong>Quantity:</strong> {{ item.quantity }} |
-          <strong>Unit Price:</strong> {{ item.unitPrice | currency }}
-        </li>
-      </ul>
     </div>
   </div>
 </div>

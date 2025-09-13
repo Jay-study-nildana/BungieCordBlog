@@ -209,4 +209,21 @@ ngOnInit() {
       }
     });
   }
+
+  cardNumberValid(): boolean {
+  // Simple Luhn check or regex for demo purposes
+  return /^[0-9]{13,19}$/.test(this.cardNumber.replace(/\s+/g, ''));
+  }
+  expiryValid(): boolean {
+    return /^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(this.expiry);
+  }
+  cvvValid(): boolean {
+    return /^[0-9]{3,4}$/.test(this.cvv);
+  }
+  nameOnCardValid(): boolean {
+    return /^[a-zA-Z ]{2,}$/.test(this.nameOnCard);
+  }
+  formValid(): boolean {
+    return this.cardNumberValid() && this.expiryValid() && this.cvvValid() && this.nameOnCardValid();
+  }
 }

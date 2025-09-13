@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Spinner, Alert, Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { FaShoppingBasket, FaUser, FaCalendarAlt, FaBoxOpen, FaDollarSign, FaCheckCircle, FaTimesCircle, FaClipboardList } from 'react-icons/fa';
 
 const USER_API = 'https://localhost:7226/api/Auth/me/guid';
 const BASKET_API = 'https://localhost:7226/api/Payment/orderbasket/by-user';
@@ -76,10 +77,14 @@ export default function OrderBasket() {
     <Container className="mt-4">
       <Row className="justify-content-center">
         <Col md={8}>
-          <Card className="shadow-sm mb-4">
+          <Card className="shadow-sm mb-4 border-0" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e3e6f3 100%)' }}>
             <Card.Body>
-              <Card.Title as="h2" className="mb-3">Order Basket</Card.Title>
-              <Card.Text>
+              <div className="d-flex align-items-center mb-3">
+                <FaShoppingBasket size={40} className="text-success me-3" />
+                <Card.Title as="h2" className="mb-0 fw-bold">Order Basket</Card.Title>
+              </div>
+              <Card.Text className="fs-5 mb-4">
+                <FaClipboardList className="me-2 text-primary" />
                 This page displays your order basket and items.
               </Card.Text>
               {loading ? (
@@ -94,36 +99,39 @@ export default function OrderBasket() {
                     <Alert variant="danger">{basketError}</Alert>
                   ) : basket ? (
                     <>
-                      <Table bordered>
+                      <Table bordered className="text-center align-middle mb-4">
                         <tbody>
-                          <tr>
-                            <th>Basket ID</th>
+                          {/* <tr>
+                            <th><FaShoppingBasket className="text-success me-1" /> Basket ID</th>
                             <td>{basket.id}</td>
                           </tr>
                           <tr>
-                            <th>User ID</th>
+                            <th><FaUser className="text-info me-1" /> User ID</th>
                             <td>{basket.userId}</td>
-                          </tr>
+                          </tr> */}
                           <tr>
-                            <th>Created Date</th>
+                            <th><FaCalendarAlt className="text-warning me-1" /> Created Date</th>
                             <td>{basket.createdDate?.replace('T', ' ').slice(0, 19)}</td>
                           </tr>
                           <tr>
-                            <th>Updated Date</th>
+                            <th><FaCalendarAlt className="text-warning me-1" /> Updated Date</th>
                             <td>{basket.updatedDate?.replace('T', ' ').slice(0, 19)}</td>
                           </tr>
                         </tbody>
                       </Table>
-                      <h5 className="mt-4">Items</h5>
+                      <h5 className="mt-4 mb-3 text-primary">
+                        <FaBoxOpen className="me-2" />
+                        Items
+                      </h5>
                       {basket.items && basket.items.length > 0 ? (
-                        <Table bordered size="sm">
-                          <thead>
+                        <Table bordered size="sm" className="text-center align-middle">
+                          <thead className="table-light">
                             <tr>
                               <th>Item ID</th>
                               <th>Product ID</th>
                               <th>Quantity</th>
-                              <th>Unit Price</th>
-                              <th>Added Date</th>
+                              <th><FaDollarSign className="text-success" /> Unit Price</th>
+                              <th><FaCalendarAlt className="text-warning" /> Added Date</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -131,7 +139,19 @@ export default function OrderBasket() {
                               <tr key={item.id}>
                                 <td>{item.id}</td>
                                 <td>{item.productId}</td>
-                                <td>{item.quantity}</td>
+                                <td>
+                                  {item.quantity > 0 ? (
+                                    <span className="text-success fw-bold">
+                                      <FaCheckCircle className="me-1" />
+                                      {item.quantity}
+                                    </span>
+                                  ) : (
+                                    <span className="text-danger fw-bold">
+                                      <FaTimesCircle className="me-1" />
+                                      {item.quantity}
+                                    </span>
+                                  )}
+                                </td>
                                 <td>{item.unitPrice}</td>
                                 <td>{item.addedDate?.replace('T', ' ').slice(0, 19)}</td>
                               </tr>
@@ -139,16 +159,17 @@ export default function OrderBasket() {
                           </tbody>
                         </Table>
                       ) : (
-                        <div>No items in basket.</div>
+                        <div className="text-muted">No items in basket.</div>
                       )}
                       <div className="mt-4 text-end">
-                        <Button variant="success" onClick={handleCheckout}>
+                        <Button variant="success" size="lg" className="px-4 py-2" onClick={handleCheckout}>
+                          <FaDollarSign className="me-2" />
                           CheckOut
                         </Button>
                       </div>
                     </>
                   ) : (
-                    <div>No basket found.</div>
+                    <div className="text-muted">No basket found.</div>
                   )}
                 </>
               )}
