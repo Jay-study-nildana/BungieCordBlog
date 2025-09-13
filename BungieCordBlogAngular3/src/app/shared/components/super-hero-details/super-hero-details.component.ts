@@ -41,7 +41,8 @@ interface OrderBasket {
 
 @Component({
   selector: 'app-super-hero-details',
-  templateUrl: './super-hero-details.component.html'
+  templateUrl: './super-hero-details.component.html',
+  styleUrls: ['./super-hero-details.component.css']
 })
 export class SuperHeroDetailsComponent implements OnInit {
   @Input() superHeroId: string = '';
@@ -64,6 +65,10 @@ export class SuperHeroDetailsComponent implements OnInit {
   orderBasketId: string = '';
   token: string = '';
   userId: string = '';
+
+  // Modal controls
+  showImageModal = false;
+  modalImageIndex = 0;
 
   constructor(
     private http: HttpClient,
@@ -142,6 +147,7 @@ export class SuperHeroDetailsComponent implements OnInit {
     });
   }
 
+  // Image gallery navigation
   nextImage() {
     if (this.images.length > 0) {
       this.imageIndex = (this.imageIndex + 1) % this.images.length;
@@ -154,6 +160,31 @@ export class SuperHeroDetailsComponent implements OnInit {
     }
   }
 
+  // Modal controls
+  openImageModal(index: number): void {
+    this.modalImageIndex = index;
+    this.showImageModal = true;
+  }
+
+  closeImageModal(): void {
+    this.showImageModal = false;
+  }
+
+  prevModalImage(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.images.length > 0) {
+      this.modalImageIndex = (this.modalImageIndex - 1 + this.images.length) % this.images.length;
+    }
+  }
+
+  nextModalImage(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.images.length > 0) {
+      this.modalImageIndex = (this.modalImageIndex + 1) % this.images.length;
+    }
+  }
+
+  // Cart controls
   increaseQuantity() {
     this.quantity++;
   }

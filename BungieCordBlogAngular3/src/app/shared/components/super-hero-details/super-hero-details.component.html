@@ -1,87 +1,184 @@
-<div class="container my-4">
-  <div *ngIf="loading" class="text-center my-3">
-    <span class="spinner-border"></span> Loading...
+<div class="container-fluid my-4">
+  <div *ngIf="loading" class="text-center my-5">
+    <span class="spinner-border spinner-border-lg text-primary"></span>
+    <div class="mt-3 fs-4 text-primary">Loading Superhero Details...</div>
   </div>
-  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+  <div *ngIf="error" class="alert alert-danger text-center fs-5">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+  </div>
   <div *ngIf="hero && !loading">
-    <div class="card mx-auto" style="max-width: 500px;">
-      <div class="card-body">
-        <h4 class="card-title text-center">{{ hero.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted text-center">{{ hero.alias }}</h6>
-        <ul class="list-unstyled text-center mb-4">
-          <li><strong>Origin:</strong> {{ hero.origin }}</li>
-          <li><strong>First Appearance:</strong> {{ hero.firstAppearance | date:'yyyy-MM-dd' }}</li>
-          <li><strong>Active:</strong> {{ hero.isActive ? 'Yes' : 'No' }}</li>
-          <li><strong>Age:</strong> {{ hero.age }}</li>
-        </ul>
-        <div class="mb-4">
-          <h5 class="text-center mb-2">Image Gallery</h5>
-          <div *ngIf="images.length > 0" class="d-flex align-items-center justify-content-center" style="gap:8px;">
-            <button class="btn btn-outline-secondary btn-sm"
-                    style="height:40px; width:40px;"
-                    (click)="prevImage()">
-              &lt;
-            </button>
-            <img [src]="images[imageIndex].url"
-                 [alt]="images[imageIndex].title"
-                 class="img-thumbnail"
-                 style="height:200px; width:180px; object-fit:cover;">
-            <button class="btn btn-outline-secondary btn-sm"
-                    style="height:40px; width:40px;"
-                    (click)="nextImage()">
-              &gt;
-            </button>
+    <div class="card w-100 shadow-lg border-0" style="min-height: 80vh;">
+      <div class="card-body px-4 py-5">
+        <div class="row">
+          <!-- Left: Image Gallery -->
+          <div class="col-12 col-lg-5 d-flex flex-column align-items-center justify-content-start mb-4 mb-lg-0">
+            <img [src]="images[0].url || 'assets/default-hero.png'"
+                 [alt]="hero.name"
+                 class="rounded-circle border border-3 border-primary mb-4"
+                 style="width: 160px; height: 160px; object-fit: cover;">
+            <h4 class="text-center mb-3 text-primary">
+              <i class="bi bi-images me-2"></i>Image Gallery
+            </h4>
+            <div *ngIf="images.length > 0" class="d-flex align-items-center justify-content-center mb-2" style="gap:18px;">
+              <button class="btn btn-outline-secondary btn-lg"
+                      style="height:60px; width:60px;"
+                      (click)="prevImage()">
+                <i class="bi bi-arrow-left-circle fs-2"></i>
+              </button>
+              <img [src]="images[imageIndex].url"
+                   [alt]="images[imageIndex].title"
+                   class="img-thumbnail border border-3 border-primary shadow"
+                   style="height:540px; width:360px; object-fit:cover; cursor:pointer;"
+                   (click)="openImageModal(imageIndex)">
+              <button class="btn btn-outline-secondary btn-lg"
+                      style="height:60px; width:60px;"
+                      (click)="nextImage()">
+                <i class="bi bi-arrow-right-circle fs-2"></i>
+              </button>
+            </div>
+            <div *ngIf="images.length > 0" class="text-center mt-3 fs-5 text-secondary">
+              <i class="bi bi-image me-2"></i>{{ images[imageIndex].title }}
+            </div>
+            <div *ngIf="images.length === 0" class="text-center text-muted fs-5">
+              <i class="bi bi-image-alt me-2"></i>No images found.
+            </div>
           </div>
-          <div *ngIf="images.length > 0" class="text-center mt-2" style="font-size:1em;">
-            {{ images[imageIndex].title }}
-          </div>
-          <div *ngIf="images.length === 0" class="text-center text-muted">
-            No images found.
-          </div>
-        </div>
-        <h5 class="text-center mt-4 mb-2">Super Powers</h5>
-        <ul class="list-group mb-4">
-          <li *ngFor="let power of powers" class="list-group-item text-center">
-            <strong>{{ power.powerName }}</strong>: {{ power.description }}
-          </li>
-          <li *ngIf="powers.length === 0" class="list-group-item text-muted text-center">No powers found.</li>
-        </ul>
-        <h5 class="text-center mt-4 mb-2">Sidekicks</h5>
-        <ul class="list-group mb-4">
-          <li *ngFor="let sidekick of sidekicks" class="list-group-item text-center">
-            <strong>{{ sidekick.name }}</strong> (Age: {{ sidekick.age }})
-          </li>
-          <li *ngIf="sidekicks.length === 0" class="list-group-item text-muted text-center">No sidekicks found.</li>
-        </ul>
-        <h5 class="text-center mt-4 mb-2">Product Stock</h5>
-        <div *ngIf="productStock" class="mb-3">
-          <ul class="list-group">
-            <li class="list-group-item"><strong>SKU:</strong> {{ productStock.sku }}</li>
-            <li class="list-group-item"><strong>Description:</strong> {{ productStock.description }}</li>
-            <li class="list-group-item"><strong>Unit Price:</strong> {{ productStock.unitPrice | currency:productStock.currency }}</li>
-            <li class="list-group-item"><strong>Quantity:</strong> {{ productStock.quantity }}</li>
-            <li class="list-group-item"><strong>Currency:</strong> {{ productStock.currency }}</li>
-            <li class="list-group-item"><strong>Active:</strong> {{ productStock.isActive ? 'Yes' : 'No' }}</li>
-            <li class="list-group-item"><strong>Last Updated:</strong> {{ productStock.lastUpdated | date:'yyyy-MM-dd HH:mm:ss' }}</li>
-          </ul>
-          <div class="d-flex justify-content-center align-items-center mt-3" *ngIf="productStock.isActive">
-            <button class="btn btn-outline-secondary me-2" (click)="decreaseQuantity()" [disabled]="cartLoading || quantity <= 1">-</button>
-            <span class="mx-2" style="min-width:40px; display:inline-block;">{{ quantity }}</span>
-            <button class="btn btn-outline-secondary ms-2" (click)="increaseQuantity()" [disabled]="cartLoading">+</button>
-          </div>
-          <div class="text-center mt-3">
-            <button class="btn btn-success" (click)="addToCart()" [disabled]="cartLoading">
-              Add to Cart
-              <span *ngIf="cartLoading" class="spinner-border spinner-border-sm ms-2"></span>
-            </button>
-          </div>
-          <div *ngIf="showCartMessage" class="mt-3 text-center">
-            <div [ngClass]="cartSuccess ? 'alert alert-success' : 'alert alert-danger'">
-              {{ cartMessage }}
+          <!-- Right: Details and Other Content -->
+          <div class="col-12 col-lg-7">
+            <div class="text-center text-lg-start mb-4">
+              <h2 class="card-title fw-bold text-primary mb-2">
+                <i class="bi bi-person-bounding-box me-2"></i>{{ hero.name }}
+              </h2>
+              <h5 class="card-subtitle mb-3 text-secondary fst-italic">
+                <i class="bi bi-stars me-2"></i>{{ hero.alias }}
+              </h5>
+              <div class="row g-3 justify-content-center justify-content-lg-start mb-3">
+                <div class="col-auto">
+                  <span class="badge bg-info text-dark fs-6 px-3 py-2">
+                    <i class="bi bi-geo-alt-fill me-1"></i> {{ hero.origin }}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    {{ hero.firstAppearance | date:'yyyy-MM-dd' }}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="bi bi-check-circle me-1"></i>
+                    {{ hero.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <span class="badge bg-secondary fs-6 px-3 py-2">
+                    <i class="bi bi-person me-1"></i> Age: {{ hero.age }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- Super Powers -->
+            <h4 class="text-success mt-4 mb-3">
+              <i class="bi bi-lightning-charge-fill me-2"></i>Super Powers
+            </h4>
+            <ul class="list-group list-group-flush mb-4">
+              <li *ngFor="let power of powers" class="list-group-item fs-5">
+                <i class="bi bi-lightning-fill text-warning me-2"></i>
+                <strong>{{ power.powerName }}</strong>: {{ power.description }}
+              </li>
+              <li *ngIf="powers.length === 0" class="list-group-item text-muted text-center fs-5">
+                <i class="bi bi-emoji-frown me-2"></i>No powers found.
+              </li>
+            </ul>
+            <!-- Sidekicks -->
+            <h4 class="text-info mt-4 mb-3">
+              <i class="bi bi-people-fill me-2"></i>Sidekicks
+            </h4>
+            <ul class="list-group list-group-flush mb-4">
+              <li *ngFor="let sidekick of sidekicks" class="list-group-item fs-5">
+                <i class="bi bi-person-badge-fill text-primary me-2"></i>
+                <strong>{{ sidekick.name }}</strong>
+                <span class="badge bg-secondary ms-2">Age: {{ sidekick.age }}</span>
+              </li>
+              <li *ngIf="sidekicks.length === 0" class="list-group-item text-muted text-center fs-5">
+                <i class="bi bi-emoji-frown me-2"></i>No sidekicks found.
+              </li>
+            </ul>
+            <!-- Product Stock -->
+            <h4 class="text-warning mt-4 mb-3">
+              <i class="bi bi-box-seam me-2"></i>Product Stock
+            </h4>
+            <div *ngIf="productStock" class="mb-3">
+              <ul class="list-group list-group-flush fs-5">
+                <li class="list-group-item">
+                  <i class="bi bi-upc-scan me-2"></i><strong>SKU:</strong> {{ productStock.sku }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-card-text me-2"></i><strong>Description:</strong> {{ productStock.description }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-currency-dollar me-2"></i><strong>Unit Price:</strong> {{ productStock.unitPrice | currency:productStock.currency }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-stack me-2"></i><strong>Quantity:</strong> {{ productStock.quantity }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-currency-exchange me-2"></i><strong>Currency:</strong> {{ productStock.currency }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-check-circle-fill me-2"></i><strong>Active:</strong> {{ productStock.isActive ? 'Yes' : 'No' }}
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-clock-history me-2"></i><strong>Last Updated:</strong> {{ productStock.lastUpdated | date:'yyyy-MM-dd HH:mm:ss' }}
+                </li>
+              </ul>
+              <div class="d-flex justify-content-center align-items-center mt-3" *ngIf="productStock.isActive">
+                <button class="btn btn-outline-secondary me-2" (click)="decreaseQuantity()" [disabled]="cartLoading || quantity <= 1">
+                  <i class="bi bi-dash"></i>
+                </button>
+                <span class="mx-2 fs-4 fw-bold" style="min-width:40px; display:inline-block;">{{ quantity }}</span>
+                <button class="btn btn-outline-secondary ms-2" (click)="increaseQuantity()" [disabled]="cartLoading">
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
+              <div class="text-center mt-3">
+                <button class="btn btn-success btn-lg px-4" (click)="addToCart()" [disabled]="cartLoading">
+                  <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                  <span *ngIf="cartLoading" class="spinner-border spinner-border-sm ms-2"></span>
+                </button>
+              </div>
+              <div *ngIf="showCartMessage" class="mt-3 text-center">
+                <div [ngClass]="cartSuccess ? 'alert alert-success' : 'alert alert-danger'">
+                  <i class="bi" [ngClass]="cartSuccess ? 'bi-check-circle-fill' : 'bi-x-circle-fill'" class="me-2"></i>
+                  {{ cartMessage }}
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!productStock" class="text-muted mb-3 fs-5 text-center">
+              <i class="bi bi-box me-2"></i>No product stock information found.
             </div>
           </div>
         </div>
-        <div *ngIf="!productStock" class="text-muted mb-3">No product stock information found.</div>
+        <!-- Modal Overlay for Image Blowup (outside row for z-index) -->
+        <div *ngIf="showImageModal" class="modal-overlay" (click)="closeImageModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="closeImageModal()">
+              <i class="bi bi-x-lg"></i>
+            </button>
+            <button class="nav-btn left" (click)="prevModalImage($event)">
+              <i class="bi bi-arrow-left-circle"></i>
+            </button>
+            <img [src]="images[modalImageIndex].url"
+                 [alt]="images[modalImageIndex].title"
+                 class="modal-img">
+            <button class="nav-btn right" (click)="nextModalImage($event)">
+              <i class="bi bi-arrow-right-circle"></i>
+            </button>
+            <div class="modal-title">
+              <i class="bi bi-image me-2"></i>{{ images[modalImageIndex].title }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

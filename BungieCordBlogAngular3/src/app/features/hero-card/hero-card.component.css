@@ -1,0 +1,19 @@
+.hero-card-portrait {
+  width: 100%;
+  max-width: 440px;
+  min-height: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-img-portrait {
+  width: 340px;
+  height: 540px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
