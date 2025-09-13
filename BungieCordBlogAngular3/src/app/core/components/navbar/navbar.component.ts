@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { User } from 'src/app/features/auth/models/user.model';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
+import { User } from 'src/app/features/auth/models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -9,28 +8,20 @@ import { AuthService } from 'src/app/features/auth/services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  user?: User;
+  user: User | undefined;
 
-  constructor(private authService: AuthService,
-    private router: Router) {
-  }
-
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.user()
-    .subscribe({
-      next: (response) => {
-        this.user = response;
-      }
-    });
-
     this.user = this.authService.getUser();
+    this.authService.user().subscribe(u => this.user = u);
+  }
 
+  hasAdminRole(): boolean {
+    return this.user?.roles?.includes('Admin') ?? false;
   }
 
   onLogout(): void {
     this.authService.logout();
-    this.router.navigateByUrl('/');
   }
-
 }

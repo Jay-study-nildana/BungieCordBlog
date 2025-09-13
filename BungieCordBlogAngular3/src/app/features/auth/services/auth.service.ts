@@ -15,7 +15,14 @@ export class AuthService {
   $user = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(private http: HttpClient,
-    private cookieService: CookieService) { }
+    private cookieService: CookieService) {
+
+        const user = this.getUser();
+        if (user) {
+          this.$user.next(user);
+  }
+
+     }
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/api/auth/login`, {

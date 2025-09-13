@@ -6,6 +6,10 @@ import { AuthContext } from "../contexts/AuthContext";
 export default function AppNavbar() {
   const { isLoggedIn, logout } = useContext(AuthContext);
 
+  // Get roles from localStorage and check for Admin
+  const roles = JSON.parse(localStorage.getItem('authRoles') || '[]');
+  const isAdmin = roles.includes('Admin');
+
   const handleLogout = () => {
     logout();
     window.location.href = "/";
@@ -33,15 +37,17 @@ export default function AppNavbar() {
             <Nav.Link as={Link} to="/about" className="text-white">
               About
             </Nav.Link>
-            <Nav.Link as={Link} to="/bungie-cord" className="text-white">
+            {/* <Nav.Link as={Link} to="/bungie-cord" className="text-white">
               Bungie Cord
-            </Nav.Link>
-            <Nav.Link as={Link} to="/admin2" className="text-white">
-              Admin2
-            </Nav.Link>        
-            <Nav.Link as={Link} to="/home2" className="text-white">
+            </Nav.Link> */}
+            {isLoggedIn && isAdmin && (
+              <Nav.Link as={Link} to="/admin2" className="text-white">
+                Admin Panel
+              </Nav.Link>
+            )}
+            {/* <Nav.Link as={Link} to="/home2" className="text-white">
               Home2
-            </Nav.Link>    
+            </Nav.Link>     */}
             {!isLoggedIn && (
               <>
                 <Nav.Link as={Link} to="/registration" className="text-white">

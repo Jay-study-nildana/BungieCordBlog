@@ -13,47 +13,19 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/about">About Us</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/admin2">Admin2</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/home2">Home2</a>
+        <li class="nav-item" *ngIf="hasAdminRole()">
+          <a class="nav-link" routerLink="/admin2">Admin Panel</a>
         </li>
         <ng-container *ngIf="user">
           <li class="nav-item">
             <a class="nav-link" routerLink="/order-basket">Order Basket</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="user !== undefined">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Admin
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" [routerLink]="['/admin/categories']">Categories</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" [routerLink]="['/admin/blogposts']">BlogPosts</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" [routerLink]="['/admin/images']">Images</a></li>
-              <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-            </ul>
-          </li>
-        </ng-container>
-
-
       </ul>
-
-
       <div class="d-flex">
         <ng-container *ngIf="user === undefined;else showLogout">
-          <!-- Show Login Button -->
           <a [routerLink]="['/login']" class="btn btn-primary">Login</a>
           <a [routerLink]="['/register']" class="btn btn-primary ms-2">Register</a>
-
         </ng-container>
         <ng-template #showLogout>
           <div class="d-flex align-items-center">
@@ -63,12 +35,8 @@
             </a>
             <button class="btn btn-primary ms-3" (click)="onLogout()">Logout</button>
           </div>
-
         </ng-template>
-
-
       </div>
-
     </div>
   </div>
 </nav>

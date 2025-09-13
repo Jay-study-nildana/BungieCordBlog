@@ -29,11 +29,12 @@ import { ProductStockComponent } from './features/product-stock/product-stock.co
 import { AllOrdersComponent } from './features/all-orders/all-orders.component';
 import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.component';
 import { AdvancedUserManagementComponent } from './features/advanced-user-management/advanced-user-management.component';
+import { AdminGuard } from './features/auth/guards/admin.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: Home2Component
   },
   {
     path: 'login',
@@ -91,7 +92,8 @@ const routes: Routes = [
   },
   {
     path: 'admin2',
-    component: Admin2Component
+    component: Admin2Component,
+    canActivate: [AdminGuard]
   },
   {
     path: 'superhero',

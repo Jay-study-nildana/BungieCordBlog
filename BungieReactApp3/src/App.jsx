@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import './styles/custom-theme.css';
@@ -9,7 +9,7 @@ import Contact from './pages/Contact';
 import Registration from './pages/Registration';
 import Login from './pages/Login';
 import UserProfile from './pages/UserProfile';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, AuthContext } from './contexts/AuthContext';
 import BungieCord from './pages/BungieCord';
 import ImageThings from './pages/ImageThings';
 import SeeAllImages from './pages/SeeAllImages';
@@ -38,6 +38,17 @@ function SuperHeroCardWrapper() {
   return <SuperHeroCard superHeroId={id} />;
 }
 
+// Protected route for Admin only
+function AdminRoute({ children }) {
+  const { isLoggedIn } = useContext(AuthContext);
+  const roles = JSON.parse(localStorage.getItem('authRoles') || '[]');
+  const isAdmin = roles.includes('Admin');
+  if (!isLoggedIn || !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -45,7 +56,7 @@ export default function App() {
         <Navbar />
         <main style={{ paddingBottom: '80px' }}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home2 />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/registration" element={<Registration />} />
@@ -57,7 +68,14 @@ export default function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/blog-posts" element={<BlogPosts />} />
           <Route path="/read-blog" element={<ReadBlog />} />
-          <Route path="/admin2" element={<Admin2 />} />
+          <Route
+            path="/admin2"
+            element={
+              <AdminRoute>
+                <Admin2 />
+              </AdminRoute>
+            }
+          />
           <Route path="/super-heroes" element={<SuperHeroes />} />
           <Route path="/super-powers" element={<SuperPowers />} />
           <Route path="/sidekick" element={<SideKick />} />
