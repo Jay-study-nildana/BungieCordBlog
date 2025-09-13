@@ -29,7 +29,8 @@ import OrderBasket from './pages/OrderBasket';
 import Payment from './pages/Payment';
 import ProductStock from './pages/ProductStock';
 import AllOrders from './pages/AllOrders';
-import UserExtraInfo from './pages/UserExtraInfo'; // Add this import
+import UserExtraInfo from './pages/UserExtraInfo';
+import AdvancedUserManagement from './pages/AdvancedUserManagement';
 
 // Wrapper to pass superHeroId from URL params
 function SuperHeroCardWrapper() {
@@ -69,7 +70,8 @@ export default function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/product-stock" element={<ProductStock />} />
           <Route path="/all-orders" element={<AllOrders />} />
-          <Route path="/user-extra-info" element={<UserExtraInfo />} /> {/* Add this route */}
+          <Route path="/user-extra-info" element={<UserExtraInfo />} /> 
+          <Route path="/advanced-user-management" element={<AdvancedUserManagement />} />
         </Routes>
         </main>
         <Footer />

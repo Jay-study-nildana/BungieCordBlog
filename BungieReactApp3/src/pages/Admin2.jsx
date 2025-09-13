@@ -63,6 +63,9 @@ export default function Admin2() {
                   <Link to="/user-extra-info" className="btn btn-outline-info">
                     Go to User Extra Info
                   </Link>
+                  <Link to="/advanced-user-management" className="btn btn-outline-info">
+                    Go to Advanced User Management
+                  </Link>
                 </div>
               </Card.Text>
             </Card.Body>

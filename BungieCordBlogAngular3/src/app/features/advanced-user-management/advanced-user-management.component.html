@@ -1,0 +1,85 @@
+<div class="container-fluid my-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10">
+      <h2 class="text-center mb-4">Advanced User Management</h2>
+      <div *ngIf="loading" class="text-center my-3">
+        <span class="spinner-border"></span> Loading users...
+      </div>
+      <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+      <div *ngIf="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
+      <div class="table-responsive">
+        <table *ngIf="users && !loading" class="table table-sm table-bordered table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>User Name</th>
+              <th>Roles</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let user of users">
+              <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.userName }}</td>
+                <td>
+                  <span *ngFor="let role of user.roles; let last = last">
+                    {{ role }}<span *ngIf="!last">, </span>
+                  </span>
+                </td>
+                <!-- <td>{{ user.isActive === true ? 'Yes' : user.isActive === false ? 'No' : '-' }}</td> -->
+                <td>
+                  <button class="btn btn-info btn-sm me-1" (click)="toggleDetails(user.id)">
+                    {{ detailsUserId === user.id ? 'Hide Details' : 'Show Details' }}
+                  </button>
+                  <button class="btn btn-warning btn-sm" (click)="openRoleDropdown(user.id)">
+                    Change Role
+                  </button>
+                  <div *ngIf="roleDropdownUserId === user.id" class="mt-2">
+                    <div class="input-group input-group-sm">
+                      <select class="form-select" [(ngModel)]="selectedRole">
+                        <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
+                      </select>
+                      <button class="btn btn-success" (click)="changeUserRole(user.email)">Confirm</button>
+                      <button class="btn btn-secondary" (click)="closeRoleDropdown()">Cancel</button>
+                    </div>
+                    <div *ngIf="roleChangeLoading" class="mt-2 text-info">
+                      <span class="spinner-border spinner-border-sm"></span> Changing role...
+                    </div>
+                    <div *ngIf="roleChangeError" class="mt-2 text-danger">
+                      {{ roleChangeError }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="detailsUserId === user.id">
+                <td colspan="5">
+                  <div class="card mt-2 mb-2">
+                    <div class="card-body">
+                      <h5 class="card-title">User Details</h5>
+                      <ul class="list-unstyled mb-2">
+                        <li><strong>Email:</strong> {{ user.email }}</li>
+                        <li><strong>User Name:</strong> {{ user.userName }}</li>
+                        <li><strong>Roles:</strong> {{ user.roles.join(', ') }}</li>
+                        <li><strong>Full Name:</strong> {{ user.fullName || '-' }}</li>
+                        <li><strong>Phone Number:</strong> {{ user.phoneNumber || '-' }}</li>
+                        <li><strong>Address:</strong> {{ user.address || '-' }}</li>
+                        <li><strong>Registered Date:</strong> {{ user.registeredDate ? (user.registeredDate | date:'yyyy-MM-dd') : '-' }}</li>
+                        <li><strong>Active:</strong> {{ user.isActive === true ? 'Yes' : user.isActive === false ? 'No' : '-' }}</li>
+                        <li>
+                          <strong>Profile Image:</strong>
+                          <img *ngIf="user.profileImageUrl" [src]="user.profileImageUrl" alt="Profile" style="width:60px; height:60px; object-fit:cover;">
+                          <span *ngIf="!user.profileImageUrl">-</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

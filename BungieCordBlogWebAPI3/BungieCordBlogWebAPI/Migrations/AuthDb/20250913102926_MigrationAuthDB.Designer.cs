@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BungieCordBlogWebAPI.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20250908162529_MigrationAuthDB")]
+    [Migration("20250913102926_MigrationAuthDB")]
     partial class MigrationAuthDB
     {
         /// <inheritdoc />
@@ -65,6 +65,13 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
                             ConcurrencyStamp = "a850f27d-35b2-5335-b8cf-2cc11c8d7904",
                             Name = "Writer",
                             NormalizedName = "WRITER"
+                        },
+                        new
+                        {
+                            Id = "c1a1e2d3-4b5c-6d7e-8f90-123456789abc",
+                            ConcurrencyStamp = "c1a1e2d3-4b5c-6d7e-8f90-123456789abc",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         });
                 });
 
@@ -162,15 +169,15 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
                         {
                             Id = "f3d378fd-e54d-5f4c-9219-b2b2f92a017e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d17575c-c6a7-409d-9957-9d808c25932e",
+                            ConcurrencyStamp = "8f68f0c3-80cf-4028-a4a9-ae51e0300b53",
                             Email = "admin@BungieCordBlog.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@BUNGIECORDBLOG.COM",
                             NormalizedUserName = "ADMIN@BUNGIECORDBLOG.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKmIsjrolAlGHmC8NquiHIUb2IlWtmcu6y5X5A9C+y9p//jIGZMEUzHku7eItNbQng==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKtUxVrd7L2sOSHEswGDZtoDOdHTPI2n69DDj+vlAqXsVnixxvq9iMZEH9bxCS6wcw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c13eeee4-6b24-4eb0-8ec8-ba393954e393",
+                            SecurityStamp = "710af648-b6ff-4a3c-a313-7b1e4e295da9",
                             TwoFactorEnabled = false,
                             UserName = "admin@BungieCordBlog.com"
                         });
@@ -247,6 +254,11 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
                         {
                             UserId = "f3d378fd-e54d-5f4c-9219-b2b2f92a017e",
                             RoleId = "a850f27d-35b2-5335-b8cf-2cc11c8d7904"
+                        },
+                        new
+                        {
+                            UserId = "f3d378fd-e54d-5f4c-9219-b2b2f92a017e",
+                            RoleId = "c1a1e2d3-4b5c-6d7e-8f90-123456789abc"
                         });
                 });
 

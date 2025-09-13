@@ -39,6 +39,7 @@ import { PaymentPageComponent } from './features/payment-page/payment-page.compo
 import { ProductStockComponent } from './features/product-stock/product-stock.component';
 import { AllOrdersComponent } from './features/all-orders/all-orders.component';
 import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.component';
+import { AdvancedUserManagementComponent } from './features/advanced-user-management/advanced-user-management.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.c
     ProductStockComponent,
     AllOrdersComponent,
     UserextrainfoComponent,
+    AdvancedUserManagementComponent,
   ],
   imports: [
     BrowserModule,

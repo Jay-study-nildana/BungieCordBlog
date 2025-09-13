@@ -164,13 +164,14 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
                 values: new object[,]
                 {
                     { "38e75b6c-b8ec-4951-c481-946a2f8e8642", "38e75b6c-b8ec-4951-c481-946a2f8e8642", "Reader", "READER" },
-                    { "a850f27d-35b2-5335-b8cf-2cc11c8d7904", "a850f27d-35b2-5335-b8cf-2cc11c8d7904", "Writer", "WRITER" }
+                    { "a850f27d-35b2-5335-b8cf-2cc11c8d7904", "a850f27d-35b2-5335-b8cf-2cc11c8d7904", "Writer", "WRITER" },
+                    { "c1a1e2d3-4b5c-6d7e-8f90-123456789abc", "c1a1e2d3-4b5c-6d7e-8f90-123456789abc", "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "f3d378fd-e54d-5f4c-9219-b2b2f92a017e", 0, "3d17575c-c6a7-409d-9957-9d808c25932e", "admin@BungieCordBlog.com", false, false, null, "ADMIN@BUNGIECORDBLOG.COM", "ADMIN@BUNGIECORDBLOG.COM", "AQAAAAIAAYagAAAAEKmIsjrolAlGHmC8NquiHIUb2IlWtmcu6y5X5A9C+y9p//jIGZMEUzHku7eItNbQng==", null, false, "c13eeee4-6b24-4eb0-8ec8-ba393954e393", false, "admin@BungieCordBlog.com" });
+                values: new object[] { "f3d378fd-e54d-5f4c-9219-b2b2f92a017e", 0, "8f68f0c3-80cf-4028-a4a9-ae51e0300b53", "admin@BungieCordBlog.com", false, false, null, "ADMIN@BUNGIECORDBLOG.COM", "ADMIN@BUNGIECORDBLOG.COM", "AQAAAAIAAYagAAAAEKtUxVrd7L2sOSHEswGDZtoDOdHTPI2n69DDj+vlAqXsVnixxvq9iMZEH9bxCS6wcw==", null, false, "710af648-b6ff-4a3c-a313-7b1e4e295da9", false, "admin@BungieCordBlog.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -178,7 +179,8 @@ namespace BungieCordBlogWebAPI.Migrations.AuthDb
                 values: new object[,]
                 {
                     { "38e75b6c-b8ec-4951-c481-946a2f8e8642", "f3d378fd-e54d-5f4c-9219-b2b2f92a017e" },
-                    { "a850f27d-35b2-5335-b8cf-2cc11c8d7904", "f3d378fd-e54d-5f4c-9219-b2b2f92a017e" }
+                    { "a850f27d-35b2-5335-b8cf-2cc11c8d7904", "f3d378fd-e54d-5f4c-9219-b2b2f92a017e" },
+                    { "c1a1e2d3-4b5c-6d7e-8f90-123456789abc", "f3d378fd-e54d-5f4c-9219-b2b2f92a017e" }
                 });
 
             migrationBuilder.CreateIndex(
