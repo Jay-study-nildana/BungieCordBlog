@@ -1,0 +1,67 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0">
+        <div class="card-body">
+          <h2 class="card-title text-center text-primary mb-4">
+            <i class="bi bi-basket-fill me-2"></i>Order Basket
+          </h2>
+          <div *ngIf="loading" class="my-4 text-center">
+            <span class="spinner-border text-primary"></span>
+            <div class="mt-2 fs-5 text-primary">Loading basket...</div>
+          </div>
+          <div *ngIf="error" class="alert alert-danger text-center fs-5">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+          </div>
+          <div *ngIf="basket && !loading">
+            <div class="mb-3">
+              <!-- <span class="badge bg-info text-dark fs-6 me-2">
+                <i class="bi bi-hash me-1"></i>Basket ID: {{ basket.id }}
+              </span>
+              <span class="badge bg-secondary fs-6 me-2">
+                <i class="bi bi-person me-1"></i>User ID: {{ basket.userId }}
+              </span> -->
+              <span class="badge bg-light text-dark fs-6 me-2">
+                <i class="bi bi-calendar-plus me-1"></i>Created: {{ basket.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}
+              </span>
+              <span class="badge bg-light text-dark fs-6">
+                <i class="bi bi-calendar-check me-1"></i>Updated: {{ basket.updatedDate | date:'yyyy-MM-dd HH:mm:ss' }}
+              </span>
+            </div>
+            <div class="alert alert-info mt-4">
+              <h5 class="mb-3 text-primary">
+                <i class="bi bi-list-check me-2"></i>Basket Summary
+              </h5>
+              <ul class="list-group">
+                <li *ngIf="basket.items.length === 0" class="list-group-item text-muted text-center">
+                  <i class="bi bi-emoji-frown me-2"></i>No items in your basket yet.
+                </li>
+                <li *ngFor="let item of basket.items" class="list-group-item d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+                  <div>
+                    <span class="fw-bold text-success"><i class="bi bi-box-seam me-1"></i>Product ID:</span> {{ item.productId }}
+                  </div>
+                  <div>
+                    <span class="fw-bold"><i class="bi bi-stack me-1"></i>Quantity:</span> {{ item.quantity }}
+                  </div>
+                  <div>
+                    <span class="fw-bold"><i class="bi bi-currency-dollar me-1"></i>Unit Price:</span> {{ item.unitPrice | currency }}
+                  </div>
+                  <div>
+                    <span class="fw-bold"><i class="bi bi-clock-history me-1"></i>Added:</span> {{ item.addedDate | date:'yyyy-MM-dd HH:mm:ss' }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="text-center mt-4">
+              <button class="btn btn-success btn-lg px-4"
+                [disabled]="basket.items.length === 0"
+                (click)="goToPayment()">
+                <i class="bi bi-credit-card-2-front me-2"></i>Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

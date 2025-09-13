@@ -1,0 +1,87 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <h2 class="text-center mb-4">Product Stock Section</h2>
+      <button class="btn btn-success mb-3" (click)="newStock()">Add New Product Stock</button>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>SuperHero</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>SKU</th>
+            <th>Description</th>
+            <th>Currency</th>
+            <th>Active</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let stock of stocks">
+            <tr>
+              <td>
+                {{ getSuperHeroName(stock.superHeroId) }}
+              </td>
+              <td>{{ stock.unitPrice | currency:stock.currency }}</td>
+              <td>{{ stock.quantity }}</td>
+              <td>{{ stock.sku }}</td>
+              <td>{{ stock.description }}</td>
+              <td>{{ stock.currency }}</td>
+              <td>{{ stock.isActive ? 'Yes' : 'No' }}</td>
+              <td>{{ stock.lastUpdated | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm" (click)="selectStock(stock)">Edit</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteStock(stock.id ?? '')">Delete</button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <!-- Form for Add/Edit -->
+      <div *ngIf="selectedStock" class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ isEditing ? 'Edit' : 'Add' }} Product Stock</h5>
+          <form (ngSubmit)="saveStock()" #stockForm="ngForm">
+            <div class="mb-3">
+              <label>SuperHero</label>
+              <select class="form-control" [(ngModel)]="selectedStock.superHeroId" name="superHeroId" required>
+                <option value="" disabled>Select SuperHero</option>
+                <option *ngFor="let hero of superHeroes" [value]="hero.id">{{ hero.name }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label>Unit Price</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedStock.unitPrice" name="unitPrice" required>
+            </div>
+            <div class="mb-3">
+              <label>Quantity</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedStock.quantity" name="quantity" required>
+            </div>
+            <div class="mb-3">
+              <label>SKU</label>
+              <input class="form-control" [(ngModel)]="selectedStock.sku" name="sku" required>
+            </div>
+            <div class="mb-3">
+              <label>Description</label>
+              <input class="form-control" [(ngModel)]="selectedStock.description" name="description">
+            </div>
+            <div class="mb-3">
+              <label>Currency</label>
+              <input class="form-control" [(ngModel)]="selectedStock.currency" name="currency" required>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" [(ngModel)]="selectedStock.isActive" name="isActive">
+              <label class="form-check-label">Active</label>
+            </div>
+            <button type="submit" class="btn btn-success me-2">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </form>
+          <div *ngIf="success" class="alert alert-success mt-2">{{ success }}</div>
+          <div *ngIf="error" class="alert alert-danger mt-2">{{ error }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

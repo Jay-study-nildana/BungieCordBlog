@@ -12,14 +12,25 @@ GitHub Project board is [available here](https://github.com/users/Jay-study-nild
 1. https://github.com/sameer8saini/CodePulse.UI
 1. https://github.com/sameer8saini/CodePulse.API 
 
+## Order of Learning
+
+I have built the Bungie Cord project to be a "step wise" learning project. Obviously, you start with the 1st Bungie Cord (which includes web api, angular front end and react front end). This gives you the basics of a full stack application. 
+
+Then, you move on to bungie cord 2, which contains, a giant leap in terms of concepts and ideas. 
+
+Then, you move on to bungie cord 3, which is contains 'cosmetic' improvements to bungie cord 2. 
+
 ## Projects
 
 1. [BungieCordBlogWebAPI](BungieCordBlogWebAPI)
 1. [BungieCordBlogWebAPI2](BungieCordBlogWebAPI2)
+1. [BungieCordBlogWebAPI3](BungieCordBlogWebAPI3)
 1. [BungieCordBlogAngular](BungieCordBlogAngular)
 1. [BungieCordBlogAngular2](BungieCordBlogAngular2)
+1. [BungieCordBlogAngular3](BungieCordBlogAngular3)
 1. [BungieReactApp](BungieReactApp)
 1. [BungieReactApp2](BungieReactApp2)
+1. [BungieReactApp3](BungieReactApp3)
 1. [BungieHelloWorldAPI](BungieHelloWorldAPI)
 
 # book a session with me

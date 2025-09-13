@@ -1,0 +1,76 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <h2 class="text-center mb-4">All Orders Section</h2>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>User Email</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let order of orders">
+            <tr>
+              <td>{{ order.email }}</td>
+              <td>{{ order.statusString }}</td>
+              <td>{{ order.createdDate | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+              <td>{{ order.updatedDate | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+              <td>
+                <button class="btn btn-info btn-sm" (click)="toggleDetails(order.id)">
+                  {{ detailsOrderId === order.id ? 'Hide Details' : 'Show Details' }}
+                </button>
+                <button class="btn btn-primary btn-sm" (click)="selectOrder(order)">Edit Status</button>
+              </td>
+            </tr>
+            <tr *ngIf="detailsOrderId === order.id">
+              <td colspan="5">
+                <div *ngIf="loadingDetails" class="text-center">
+                  <span class="spinner-border spinner-border-sm"></span> Loading details...
+                </div>
+                <div *ngIf="detailsOrder && !loadingDetails">
+                  <h5>Order Details</h5>
+                  <ul class="list-unstyled">
+                    <li><strong>Order ID:</strong> {{ detailsOrder.id }}</li>
+                    <li><strong>User ID:</strong> {{ detailsOrder.userId }}</li>
+                    <li><strong>Email:</strong> {{ detailsOrder.email }}</li>
+                    <li><strong>Payment ID:</strong> {{ detailsOrder.paymentId }}</li>
+                    <li><strong>Status:</strong> {{ detailsOrder.statusString }}</li>
+                    <li><strong>Created:</strong> {{ detailsOrder.createdDate | date:'short' }}</li>
+                    <li><strong>Updated:</strong> {{ detailsOrder.updatedDate | date:'short' }}</li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <!-- Form for Edit Status -->
+      <div *ngIf="selectedOrder" class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Edit Order Status</h5>
+          <form (ngSubmit)="saveOrder()" #orderForm="ngForm">
+            <div class="mb-3">
+              <label>Status</label>
+              <select class="form-control" [(ngModel)]="selectedOrder.status" name="status" required>
+                <option [value]="0">Pending</option>
+                <option [value]="1">Processing</option>
+                <option [value]="2">Shipped</option>
+                <option [value]="3">Delivered</option>
+                <option [value]="4">Cancelled</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success me-2">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </form>
+          <div *ngIf="success" class="alert alert-success mt-2">{{ success }}</div>
+          <div *ngIf="error" class="alert alert-danger mt-2">{{ error }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

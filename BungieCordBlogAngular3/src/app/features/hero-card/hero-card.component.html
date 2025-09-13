@@ -1,0 +1,37 @@
+<div class="card h-100 shadow-sm hero-card-portrait">
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title text-center">{{ hero.name }}</h5>
+<div *ngIf="images && images.length > 0" class="mt-auto">
+  <div class="d-flex align-items-center justify-content-center" style="gap:8px;">
+    <button class="btn btn-outline-secondary btn-sm"
+            style="height:40px; width:40px;"
+            (click)="prevImage()">
+      &lt;
+    </button>
+    <img [src]="images[imageIndex].url"
+         [alt]="images[imageIndex].title"
+         class="img-thumbnail hero-img-portrait">
+    <button class="btn btn-outline-secondary btn-sm"
+            style="height:40px; width:40px;"
+            (click)="nextImage()">
+      &gt;
+    </button>
+  </div>
+  <div class="text-center mt-2" style="font-size:1em;">
+    {{ images[imageIndex].title }}
+  </div>
+</div>
+    <div *ngIf="images && images.length === 0" class="mt-auto text-center text-muted">
+      No images found.
+    </div>
+    <h6 class="card-subtitle mb-2 text-muted text-center">{{ hero.alias }}</h6>
+    <p class="card-text text-center mb-3">
+    <strong>Origin:</strong> {{ hero.origin }}<br>
+    <strong>First Appearance:</strong> {{ hero.firstAppearance | date:'yyyy-MM-dd' }}<br>
+    <strong>Active:</strong> {{ hero.isActive ? 'Yes' : 'No' }}
+    </p>
+    <button class="btn btn-info mt-3" [routerLink]="['/superhero', hero.id]">
+      View Details
+    </button>
+  </div>
+</div>

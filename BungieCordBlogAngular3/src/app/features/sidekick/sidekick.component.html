@@ -1,0 +1,60 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <h2 class="text-center mb-4">Sidekick Section</h2>
+      <button class="btn btn-success mb-3" (click)="newSidekick()">Add New Sidekick</button>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>SuperHero</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sidekick of sidekicks">
+            <td>{{ sidekick.name }}</td>
+            <td>{{ sidekick.age }}</td>
+            <td>{{ getSuperHeroName(sidekick.superHeroId) }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" (click)="selectSidekick(sidekick)">Edit</button>
+              <button 
+                class="btn btn-danger btn-sm" 
+                [disabled]="!sidekick.id"
+                (click)="sidekick.id && deleteSidekick(sidekick.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Form for Add/Edit -->
+      <div *ngIf="selectedSidekick" class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ isEditing ? 'Edit' : 'Add' }} Sidekick</h5>
+          <form (ngSubmit)="saveSidekick()" #sidekickForm="ngForm">
+            <div class="mb-3">
+              <label>Name</label>
+              <input class="form-control" [(ngModel)]="selectedSidekick.name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label>Age</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedSidekick.age" name="age" required>
+            </div>
+            <div class="mb-3">
+              <label>SuperHero</label>
+              <select class="form-select" [(ngModel)]="selectedSidekick.superHeroId" name="superHeroId" required>
+                <option value="" disabled>Select a SuperHero</option>
+                <option *ngFor="let hero of superHeroes" [value]="hero.id">{{ hero.name }}</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success me-2">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

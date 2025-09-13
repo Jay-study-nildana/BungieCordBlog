@@ -1,0 +1,26 @@
+<div class="container my-5">
+  <div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-primary" routerLink="/search">Go to Search</a>
+  </div>
+  <h2 class="text-center mb-4">SuperHeroes</h2>
+  <div *ngIf="loading" class="text-center my-5">
+    <span class="spinner-border"></span> Loading...
+  </div>
+  <div *ngIf="!loading && heroes.length === 0" class="text-center my-5">
+    <p>No superheroes found.</p>
+  </div>
+  <div *ngIf="!loading && heroes.length > 0">
+<div class="row g-4">
+  <div class="col-md-12 col-lg-6" *ngFor="let hero of heroes">
+    <app-hero-card
+      [hero]="hero"
+      [images]="heroImages[hero.id] || []"
+      [imageIndex]="heroImageIndex[hero.id] || 0">
+    </app-hero-card>
+  </div>
+</div>
+  </div>
+</div>
+<nav class="mt-4 text-center">
+  <a class="btn btn-primary" routerLink="/search">Go to Search</a>
+</nav>
