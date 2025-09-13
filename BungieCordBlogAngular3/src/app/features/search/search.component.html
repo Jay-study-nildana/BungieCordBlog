@@ -1,0 +1,58 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h2>Search Section</h2>
+      <p>Type a keyword to search the Superhero Universe.</p>
+      <form (submit)="search(); $event.preventDefault()" class="mb-4">
+        <div class="input-group">
+          <input type="text" class="form-control" [(ngModel)]="query" name="query" placeholder="Search..." required>
+          <button class="btn btn-primary" type="submit" [disabled]="loading">Search</button>
+        </div>
+      </form>
+      <div *ngIf="loading" class="my-3">
+        <span class="spinner-border"></span> Searching...
+      </div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <div *ngIf="results">
+        <h4 class="mt-4">SuperHeroes</h4>
+        <ul class="list-group mb-3">
+          <li *ngFor="let hero of results.superHeroes" class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+              <strong>{{ hero.name }}</strong> ({{ hero.alias }}) - Origin: {{ hero.origin }}
+            </span>
+            <a class="btn btn-info btn-sm" [routerLink]="['/superhero', hero.id]">View Details</a>
+          </li>
+          <li *ngIf="results.superHeroes.length === 0" class="list-group-item text-muted">No results</li>
+        </ul>
+        <h4>Super Powers</h4>
+        <ul class="list-group mb-3">
+          <li *ngFor="let power of results.superPowers" class="list-group-item">
+            <strong>{{ power.powerName }}</strong>: {{ power.description }}
+          </li>
+          <li *ngIf="results.superPowers.length === 0" class="list-group-item text-muted">No results</li>
+        </ul>
+        <h4>Sidekicks</h4>
+        <ul class="list-group mb-3">
+          <li *ngFor="let sidekick of results.sidekicks" class="list-group-item">
+            <strong>{{ sidekick.name }}</strong> (Age: {{ sidekick.age }})
+          </li>
+          <li *ngIf="results.sidekicks.length === 0" class="list-group-item text-muted">No results</li>
+        </ul>
+        <h4>Comic Appearances</h4>
+        <ul class="list-group mb-3">
+          <li *ngFor="let comic of results.comicAppearances" class="list-group-item">
+            <strong>{{ comic.comicTitle }}</strong> (Issue: {{ comic.issueNumber }}, Release: {{ comic.releaseDate | date:'yyyy-MM-dd' }})
+          </li>
+          <li *ngIf="results.comicAppearances.length === 0" class="list-group-item text-muted">No results</li>
+        </ul>
+        <h4>Sidekick Comic Appearances</h4>
+        <ul class="list-group mb-3">
+          <li *ngFor="let sca of results.sidekickComicAppearances" class="list-group-item">
+            Sidekick ID: {{ sca.sidekickId }}, Comic Appearance ID: {{ sca.comicAppearanceId }}
+          </li>
+          <li *ngIf="results.sidekickComicAppearances.length === 0" class="list-group-item text-muted">No results</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

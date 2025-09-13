@@ -1,0 +1,60 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <h2 class="text-center mb-4">SuperPower Section</h2>
+      <button class="btn btn-success mb-3" (click)="newPower()">Add New SuperPower</button>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Power Name</th>
+            <th>Description</th>
+            <th>SuperHero</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let power of powers">
+            <td>{{ power.powerName }}</td>
+            <td>{{ power.description }}</td>
+            <td>{{ getSuperHeroName(power.superHeroId) }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" (click)="selectPower(power)">Edit</button>
+              <button 
+                class="btn btn-danger btn-sm" 
+                [disabled]="!power.id"
+                (click)="power.id && deletePower(power.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Form for Add/Edit -->
+      <div *ngIf="selectedPower" class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ isEditing ? 'Edit' : 'Add' }} SuperPower</h5>
+          <form (ngSubmit)="savePower()" #powerForm="ngForm">
+            <div class="mb-3">
+              <label>Power Name</label>
+              <input class="form-control" [(ngModel)]="selectedPower.powerName" name="powerName" required>
+            </div>
+            <div class="mb-3">
+              <label>Description</label>
+              <input class="form-control" [(ngModel)]="selectedPower.description" name="description" required>
+            </div>
+            <div class="mb-3">
+              <label>SuperHero</label>
+              <select class="form-select" [(ngModel)]="selectedPower.superHeroId" name="superHeroId" required>
+                <option value="" disabled>Select a SuperHero</option>
+                <option *ngFor="let hero of superHeroes" [value]="hero.id">{{ hero.name }}</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success me-2">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

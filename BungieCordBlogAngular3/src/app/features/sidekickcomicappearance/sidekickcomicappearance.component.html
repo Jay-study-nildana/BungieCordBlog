@@ -1,0 +1,56 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <h2 class="text-center mb-4">SidekickComicAppearance Section</h2>
+      <button class="btn btn-success mb-3" (click)="newLink()">Add New Link</button>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Sidekick</th>
+            <th>Comic Appearance</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let link of links">
+            <td>{{ getSidekickName(link.sidekickId) }}</td>
+            <td>{{ getComicTitle(link.comicAppearanceId) }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" (click)="selectLink(link)">Edit</button>
+              <button 
+                class="btn btn-danger btn-sm" 
+                (click)="deleteLink(link.sidekickId, link.comicAppearanceId)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Form for Add/Edit -->
+      <div *ngIf="selectedLink" class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ isEditing ? 'Edit' : 'Add' }} Link</h5>
+          <form (ngSubmit)="saveLink()" #linkForm="ngForm">
+            <div class="mb-3">
+              <label>Sidekick</label>
+              <select class="form-select" [(ngModel)]="selectedLink.sidekickId" name="sidekickId" required>
+                <option value="" disabled>Select a Sidekick</option>
+                <option *ngFor="let sidekick of sidekicks" [value]="sidekick.id">{{ sidekick.name }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label>Comic Appearance</label>
+              <select class="form-select" [(ngModel)]="selectedLink.comicAppearanceId" name="comicAppearanceId" required>
+                <option value="" disabled>Select a Comic Appearance</option>
+                <option *ngFor="let comic of comicAppearances" [value]="comic.id">{{ comic.comicTitle }}</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success me-2">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
