@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 interface User {
   id: string;
@@ -38,10 +39,11 @@ export class AdvancedUserManagementComponent implements OnInit {
   roleChangeLoading = false;
   roleChangeError: string | null = null;
   successMessage: string | null = null;
+  token: string | null = null;
 
-  private token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBCdW5naWVDb3JkQmxvZy5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOlsiUmVhZGVyIiwiV3JpdGVyIiwiQWRtaW4iXSwiZXhwIjoxNzU3ODAzODExLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MjI2IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDIwMCJ9.0fC4VyH0MMCnvJ2ra8obnfKXeOAjiuLde5CKfwWkwvE';
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+    this.token = this.cookieService.get('Authorization');
+  }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -54,7 +56,7 @@ export class AdvancedUserManagementComponent implements OnInit {
     const url = 'https://localhost:7226/api/Auth/users-with-extra-info-and-roles';
     const headers = new HttpHeaders({
       'accept': '*/*',
-      'Authorization': `Bearer ${this.token}`
+      'Authorization': `${this.token}`
     });
 
     this.http.get<User[]>(url, { headers }).subscribe({
@@ -73,7 +75,7 @@ export class AdvancedUserManagementComponent implements OnInit {
     const url = 'https://localhost:7226/api/Auth/roles';
     const headers = new HttpHeaders({
       'accept': '*/*',
-      'Authorization': `Bearer ${this.token}`
+      'Authorization': `${this.token}`
     });
 
     this.http.get<Role[]>(url, { headers }).subscribe({
@@ -115,7 +117,7 @@ export class AdvancedUserManagementComponent implements OnInit {
     const url = 'https://localhost:7226/api/Auth/add-role-to-user';
     const headers = new HttpHeaders({
       'accept': '*/*',
-      'Authorization': `Bearer ${this.token}`,
+      'Authorization': `${this.token}`,
       'Content-Type': 'application/json'
     });
 
