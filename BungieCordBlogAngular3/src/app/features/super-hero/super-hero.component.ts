@@ -9,6 +9,9 @@ import { Sidekick } from 'src/app/shared/models/Sidekick.model';
 import { ComicAppearanceService } from 'src/app/shared/services/comicappearance.service';
 import { ComicAppearance } from 'src/app/shared/models/ComicAppearance.model';
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../auth/services/auth.service';
+import { User } from '../auth/models/user.model';
 
 interface SuperHeroImage {
   superHeroId: string;
@@ -28,6 +31,8 @@ export class SuperHeroComponent implements OnInit {
   heroes: SuperHero[] = [];
   selectedHero: SuperHero | null = null;
   isEditing = false;
+  token: string | null = null;
+  user: User | undefined;
 
   // For details view
   detailsHeroId: string | null = null;
@@ -55,15 +60,47 @@ export class SuperHeroComponent implements OnInit {
     private notificationService: NotificationService,
     private sidekickService: SidekickService,
     private comicAppearanceService: ComicAppearanceService,
-    private http: HttpClient
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
+
+    let token = this.cookieService.get('Authorization');
+    this.user = this.authService.getUser();
+    this.authService.user().subscribe(u => this.user = u);
+    console.log("Current user roles:", this.user?.roles);
     this.loadHeroes();
   }
 
+    hasAdminRole(): boolean {
+      console.log(this.user?.roles?.includes('Admin') ?? false);
+      console.log("Current user roles:", this.user?.roles);
+    return this.user?.roles?.includes('Admin') ?? false;
+  }
+
+  hasWriterButNotAdminRole(): boolean {
+    const roles = this.user?.roles ?? [];
+    return roles.includes('Writer') && !roles.includes('Admin');
+  }
+
   loadHeroes() {
-    this.heroService.getAll().subscribe(data => this.heroes = data);
+    if (this.hasAdminRole()) {
+      console.log("Admin role detected, loading all heroes.");
+      this.heroService.getAll().subscribe(data => this.heroes = data);
+    } else if (this.hasWriterButNotAdminRole()) {
+      console.log("Writer role detected, loading writer-specific heroes.");
+      this.heroService.getUserSuperHeroes().subscribe(data => this.heroes = data);
+      // TODO: Use writer-specific endpoint here
+      // Placeholder for writer role logic
+      // Example: this.heroService.getWriterHeroes().subscribe(data => this.heroes = data);
+    }
+    else {
+      console.log("No special role detected, loading nothing");
+      
+      
+    }
   }
 
   selectHero(hero: SuperHero) {

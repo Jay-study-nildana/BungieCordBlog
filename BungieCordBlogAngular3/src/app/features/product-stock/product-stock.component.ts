@@ -36,6 +36,12 @@ export class ProductStockComponent implements OnInit {
   success = '';
   superHeroes: SuperHero[] = [];
 
+  // Inline input state for increase/decrease
+  increaseInputId: string | null = null;
+  increaseAmount: number = 0;
+  decreaseInputId: string | null = null;
+  decreaseAmount: number = 0;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -44,9 +50,9 @@ export class ProductStockComponent implements OnInit {
   }
 
   getSuperHeroName(superHeroId: string): string {
-  const hero = this.superHeroes.find(h => h.id === superHeroId);
-  return hero ? hero.name : superHeroId;
-}
+    const hero = this.superHeroes.find(h => h.id === superHeroId);
+    return hero ? hero.name : superHeroId;
+  }
 
   loadStocks() {
     this.loading = true;
@@ -153,6 +159,93 @@ export class ProductStockComponent implements OnInit {
           this.error = 'Failed to delete product stock.';
         }
       });
+  }
+
+  // Inline input handlers for increase/decrease
+  showIncreaseInput(id: string) {
+    this.increaseInputId = id;
+    this.increaseAmount = 0;
+  }
+
+  showDecreaseInput(id: string) {
+    this.decreaseInputId = id;
+    this.decreaseAmount = 0;
+  }
+
+  confirmIncreaseStock(id: string) {
+    if (!id || isNaN(this.increaseAmount) || this.increaseAmount <= 0) return;
+    this.http.patch<ProductStock>(
+      `https://localhost:7226/api/ProductStock/${id}/increase?amount=${this.increaseAmount}`,
+      {}
+    ).subscribe({
+      next: () => {
+        this.success = 'Stock increased successfully!';
+        this.loadStocks();
+        this.increaseInputId = null;
+      },
+      error: () => {
+        this.error = 'Failed to increase stock.';
+        this.increaseInputId = null;
+      }
+    });
+  }
+
+  confirmDecreaseStock(id: string) {
+    if (!id || isNaN(this.decreaseAmount) || this.decreaseAmount <= 0) return;
+    this.http.patch<ProductStock>(
+      `https://localhost:7226/api/ProductStock/${id}/decrease?amount=${this.decreaseAmount}`,
+      {}
+    ).subscribe({
+      next: () => {
+        this.success = 'Stock decreased successfully!';
+        this.loadStocks();
+        this.decreaseInputId = null;
+      },
+      error: () => {
+        this.error = 'Failed to decrease stock.';
+        this.decreaseInputId = null;
+      }
+    });
+  }
+
+  cancelIncreaseInput() {
+    this.increaseInputId = null;
+  }
+
+  cancelDecreaseInput() {
+    this.decreaseInputId = null;
+  }
+
+  disableStock(id: string) {
+    if (!id) return;
+    this.http.patch<ProductStock>(
+      `https://localhost:7226/api/ProductStock/${id}/disable`,
+      {}
+    ).subscribe({
+      next: () => {
+        this.success = 'Stock disabled successfully!';
+        this.loadStocks();
+      },
+      error: () => {
+        this.error = 'Failed to disable stock.';
+      }
+    });
+  }
+
+  enableStock(id: string) {
+    if (!id) return;
+    this.http.patch<ProductStock>(
+      `https://localhost:7226/api/ProductStock/${id}/enable`,
+      {}
+    ).subscribe({
+      next: () => {
+        this.success = 'Stock enabled successfully!';
+        this.loadStocks();
+      },
+      error: () => {
+        this.error = 'Failed to enable stock.';
+      }
+    });
   }
 
   cancel() {

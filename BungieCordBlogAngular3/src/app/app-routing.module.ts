@@ -30,6 +30,10 @@ import { AllOrdersComponent } from './features/all-orders/all-orders.component';
 import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.component';
 import { AdvancedUserManagementComponent } from './features/advanced-user-management/advanced-user-management.component';
 import { AdminGuard } from './features/auth/guards/admin.guard';
+import { ProductUserTableComponent } from './features/product-user-table/product-user-table.component';
+import { WriterPanelComponent } from './features/writer-panel/writer-panel.component';
+import { WriterGuard } from './features/auth/guards/writer.guard';
+import { WriterPanelStockComponent } from './features/writer-panel-stock/writer-panel-stock.component';
 
 const routes: Routes = [
   {
@@ -123,7 +127,14 @@ const routes: Routes = [
   { path: 'allorders', component: AllOrdersComponent },
   { path: 'userextrainfo', component: UserextrainfoComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'advanced-user-management', component: AdvancedUserManagementComponent }
+  { path: 'advanced-user-management', component: AdvancedUserManagementComponent },
+  { path: 'product-user-table', component: ProductUserTableComponent },
+  { path: 'writer-panel-stock', component: WriterPanelStockComponent },
+  { 
+    path: 'writer-panel', 
+    component: WriterPanelComponent, 
+    canActivate: [WriterGuard] 
+  }
 ];
 
 @NgModule({

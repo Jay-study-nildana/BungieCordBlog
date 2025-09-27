@@ -41,6 +41,9 @@ import { AllOrdersComponent } from './features/all-orders/all-orders.component';
 import { UserextrainfoComponent } from './features/userextrainfo/userextrainfo.component';
 import { AdvancedUserManagementComponent } from './features/advanced-user-management/advanced-user-management.component';
 import { HeroCardComponent } from './features/hero-card/hero-card.component';
+import { ProductUserTableComponent } from './features/product-user-table/product-user-table.component';
+import { WriterPanelComponent } from './features/writer-panel/writer-panel.component';
+import { WriterPanelStockComponent } from './features/writer-panel-stock/writer-panel-stock.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,9 @@ import { HeroCardComponent } from './features/hero-card/hero-card.component';
     UserextrainfoComponent,
     AdvancedUserManagementComponent,
     HeroCardComponent,
+    ProductUserTableComponent,
+    WriterPanelComponent,
+    WriterPanelStockComponent,
   ],
   imports: [
     BrowserModule,

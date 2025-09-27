@@ -1,0 +1,44 @@
+<div class="container my-5">
+  <h2 class="text-center mb-4">Product User Table</h2>
+  <div *ngIf="loading" class="text-center my-3">
+    <span class="spinner-border"></span> Loading...
+  </div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+  <table *ngIf="!loading && productUsers.length > 0" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Product ID</th>
+        <th>User ID</th>
+        <th>Added Date</th>
+        <th>Active</th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of productUsers">
+        <td>{{ row.email }}</td>
+        <td>{{ row.productId }}</td>
+        <td>{{ row.userId }}</td>
+        <td>{{ row.addedDate | date:'short' }}</td>
+        <td>
+          <span *ngIf="editRowId !== row.id">{{ row.isActive ? 'Yes' : 'No' }}</span>
+          <input *ngIf="editRowId === row.id" type="checkbox" [(ngModel)]="editIsActive">
+        </td>
+        <td>
+          <span *ngIf="editRowId !== row.id">{{ row.notes }}</span>
+          <input *ngIf="editRowId === row.id" class="form-control" [(ngModel)]="editNotes">
+        </td>
+        <td>
+          <button *ngIf="editRowId !== row.id" class="btn btn-primary btn-sm" (click)="startEdit(row)">Edit</button>
+          <button *ngIf="editRowId === row.id" class="btn btn-success btn-sm me-2" (click)="saveEdit(row)">Save</button>
+          <button *ngIf="editRowId === row.id" class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && productUsers.length === 0" class="alert alert-info text-center">
+    No product user info found.
+  </div>
+</div>

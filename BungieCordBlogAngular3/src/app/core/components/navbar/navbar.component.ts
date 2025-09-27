@@ -18,7 +18,13 @@ export class NavbarComponent implements OnInit {
   }
 
   hasAdminRole(): boolean {
+    
     return this.user?.roles?.includes('Admin') ?? false;
+  }
+
+  hasWriterButNotAdminRole(): boolean {
+    const roles = this.user?.roles ?? [];
+    return roles.includes('Writer') && !roles.includes('Admin');
   }
 
   onLogout(): void {

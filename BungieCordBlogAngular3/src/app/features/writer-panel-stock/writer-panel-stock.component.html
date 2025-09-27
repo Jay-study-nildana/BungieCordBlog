@@ -1,0 +1,96 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <h2 class="text-center mb-4 text-primary">Superheroes</h2>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Alias</th>
+            <th>Age</th>
+            <th>Origin</th>
+            <th>First Appearance</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let hero of superHeroes">
+            <tr>
+              <td class="fw-bold text-success">{{ hero.name }}</td>
+              <td class="text-muted">{{ hero.alias }}</td>
+              <td>{{ hero.age > 0 ? hero.age : 'N/A' }}</td>
+              <td>{{ hero.origin || 'Unknown' }}</td>
+              <td>{{ hero.firstAppearance | date:'yyyy-MM-dd' }}</td>
+              <td>
+                <span [class]="hero.isActive ? 'badge bg-success' : 'badge bg-secondary'">
+                  {{ hero.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-warning btn-sm" (click)="showStockDetails(hero.id)">
+                  Stock Details
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="selectedStock && selectedStock.superHeroId === hero.id">
+              <td colspan="7">
+                <div class="card mt-2">
+                  <div class="card-body">
+                    <h5 class="card-title">Stock Details for {{ hero.name }}</h5>
+                    <ng-container *ngIf="!isEditingStock">
+                      <ul class="list-unstyled mb-0">
+                        <li><strong>SKU:</strong> {{ selectedStock.sku }}</li>
+                        <li><strong>Unit Price:</strong> {{ selectedStock.unitPrice }} {{ selectedStock.currency }}</li>
+                        <li><strong>Quantity:</strong> {{ selectedStock.quantity }}</li>
+                        <li><strong>Description:</strong> {{ selectedStock.description }}</li>
+                        <li><strong>Active:</strong> {{ selectedStock.isActive ? 'Yes' : 'No' }}</li>
+                        <li><strong>Last Updated:</strong> {{ selectedStock.lastUpdated | date:'short' }}</li>
+                      </ul>
+                      <button class="btn btn-secondary btn-sm mt-2 me-2" (click)="closeStockDetails()">Close</button>
+                      <button class="btn btn-primary btn-sm mt-2" (click)="startEditStock()">Update SKU</button>
+                    </ng-container>
+                    <ng-container *ngIf="isEditingStock && editStock">
+                      <form (ngSubmit)="updateStock()">
+                        <div class="row">
+                          <div class="col-md-4 mb-2">
+                            <label class="form-label">SKU</label>
+                            <input class="form-control" [(ngModel)]="editStock.sku" name="sku" required>
+                          </div>
+                          <div class="col-md-4 mb-2">
+                            <label class="form-label">Unit Price</label>
+                            <input type="number" class="form-control" [(ngModel)]="editStock.unitPrice" name="unitPrice" required>
+                          </div>
+                          <div class="col-md-4 mb-2">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control" [(ngModel)]="editStock.quantity" name="quantity" required>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4 mb-2">
+                            <label class="form-label">Currency</label>
+                            <input class="form-control" [(ngModel)]="editStock.currency" name="currency" required>
+                          </div>
+                          <div class="col-md-8 mb-2">
+                            <label class="form-label">Description</label>
+                            <input class="form-control" [(ngModel)]="editStock.description" name="description" required>
+                          </div>
+                        </div>
+                        <div class="form-check mb-2">
+                          <input type="checkbox" class="form-check-input" [(ngModel)]="editStock.isActive" name="isActive">
+                          <label class="form-check-label">Active</label>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm me-2">Save</button>
+                        <button type="button" class="btn btn-secondary btn-sm" (click)="cancelEditStock()">Cancel</button>
+                      </form>
+                    </ng-container>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

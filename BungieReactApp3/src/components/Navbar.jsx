@@ -9,6 +9,7 @@ export default function AppNavbar() {
   // Get roles from localStorage and check for Admin
   const roles = JSON.parse(localStorage.getItem('authRoles') || '[]');
   const isAdmin = roles.includes('Admin');
+  const isWriterOnly = roles.includes('Writer') && !roles.includes('Admin');
 
   const handleLogout = () => {
     logout();
@@ -43,6 +44,11 @@ export default function AppNavbar() {
             {isLoggedIn && isAdmin && (
               <Nav.Link as={Link} to="/admin2" className="text-white">
                 Admin Panel
+              </Nav.Link>
+            )}
+            {isLoggedIn && isWriterOnly && (
+              <Nav.Link as={Link} to="/writer-panel" className="text-white">
+                Writer Panel
               </Nav.Link>
             )}
             {/* <Nav.Link as={Link} to="/home2" className="text-white">

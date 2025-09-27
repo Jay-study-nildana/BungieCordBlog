@@ -8,6 +8,11 @@ const SIDEKICKS_API_BASE = 'https://localhost:7226/api/Sidekicks/by-superhero';
 const COMIC_APPEARANCES_API_BASE = 'https://localhost:7226/api/ComicAppearances/by-superhero';
 
 export default function SuperHeroes() {
+  const token = localStorage.getItem('authToken');
+  // Get roles from localStorage and check for Admin
+  const roles = JSON.parse(localStorage.getItem('authRoles') || '[]');
+  const isAdmin = roles.includes('Admin');
+  const isWriterOnly = roles.includes('Writer') && !roles.includes('Admin');  
   const [heroes, setHeroes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -47,6 +52,11 @@ export default function SuperHeroes() {
 
   // Fetch all heroes
   const fetchHeroes = async () => {
+
+    if(isAdmin === false)
+    {
+      fetchHeroesForCurrentUser();
+    }
     setLoading(true);
     setError('');
     try {
@@ -61,9 +71,36 @@ export default function SuperHeroes() {
     }
   };
 
+  const fetchHeroesForCurrentUser = async () => {
+  setLoading(true);
+  setError('');
+  try {
+    const res = await fetch('https://localhost:7226/api/SuperHeroes/user-superheroes', {
+      method: 'GET',
+      headers: {
+        'accept': '*/*',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      },
+    });
+    if (!res.ok) throw new Error('Failed to fetch user superheroes');
+    const data = await res.json();
+    setHeroes(data);
+  } catch (err) {
+    setError('Error loading user superheroes');
+  } finally {
+    setLoading(false);
+  }
+};
+
   useEffect(() => {
-    fetchHeroes();
-  }, []);
+    if (isAdmin) {
+      fetchHeroes();
+    } else if (isWriterOnly) {
+      console.log('Writer-only user: placeholder action');
+      fetchHeroesForCurrentUser();
+      // setLoading(false);
+    }
+  }, [isAdmin, isWriterOnly]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -113,16 +150,20 @@ export default function SuperHeroes() {
         isActive: Boolean(form.isActive),
       };
       let res;
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
       if (modalMode === 'create') {
         res = await fetch(API_BASE, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify(payload),
         });
       } else {
         res = await fetch(`${API_BASE}/${selectedId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify(payload),
         });
       }

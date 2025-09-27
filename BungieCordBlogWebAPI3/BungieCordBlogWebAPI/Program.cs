@@ -69,6 +69,7 @@ builder.Services.AddScoped<ISidekickComicAppearanceRepository, SidekickComicAppe
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IProductStockRepository, ProductStockRepository>();
 builder.Services.AddScoped<IUserExtraInfoRepository, UserExtraInfoRepository>();
+builder.Services.AddScoped<IProductUserInfoRepository, ProductUserInfoRepository>();
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
