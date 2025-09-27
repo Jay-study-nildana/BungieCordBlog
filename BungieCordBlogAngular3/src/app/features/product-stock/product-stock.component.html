@@ -31,8 +31,33 @@
               <td>{{ stock.isActive ? 'Yes' : 'No' }}</td>
               <td>{{ stock.lastUpdated | date:'yyyy-MM-dd HH:mm:ss' }}</td>
               <td>
-                <button class="btn btn-primary btn-sm" (click)="selectStock(stock)">Edit</button>
-                <button class="btn btn-danger btn-sm" (click)="deleteStock(stock.id ?? '')">Delete</button>
+                <div class="d-flex flex-column gap-1">
+                  <button class="btn btn-primary btn-sm" (click)="selectStock(stock)">Edit</button>
+                  <button class="btn btn-danger btn-sm" *ngIf="stock.id" (click)="deleteStock(stock.id)">Delete</button>
+
+                  <!-- Inline Increase -->
+                  <ng-container *ngIf="stock.id">
+                    <button class="btn btn-info btn-sm" (click)="showIncreaseInput(stock.id)">Increase</button>
+                    <span *ngIf="increaseInputId === stock.id" class="mt-1">
+                      <input type="number" [(ngModel)]="increaseAmount" min="1" style="width:70px;" />
+                      <button class="btn btn-success btn-sm" (click)="confirmIncreaseStock(stock.id)">OK</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelIncreaseInput()">Cancel</button>
+                    </span>
+                  </ng-container>
+
+                  <!-- Inline Decrease -->
+                  <ng-container *ngIf="stock.id">
+                    <button class="btn btn-warning btn-sm" (click)="showDecreaseInput(stock.id)">Decrease</button>
+                    <span *ngIf="decreaseInputId === stock.id" class="mt-1">
+                      <input type="number" [(ngModel)]="decreaseAmount" min="1" style="width:70px;" />
+                      <button class="btn btn-success btn-sm" (click)="confirmDecreaseStock(stock.id)">OK</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelDecreaseInput()">Cancel</button>
+                    </span>
+                  </ng-container>
+
+                  <button *ngIf="stock.isActive && stock.id" class="btn btn-secondary btn-sm" (click)="disableStock(stock.id)">Disable</button>
+                  <button *ngIf="!stock.isActive && stock.id" class="btn btn-success btn-sm" (click)="enableStock(stock.id)">Enable</button>
+                </div>
               </td>
             </tr>
           </ng-container>

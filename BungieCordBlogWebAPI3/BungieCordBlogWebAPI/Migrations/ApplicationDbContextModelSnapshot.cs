@@ -325,6 +325,37 @@ namespace BungieCordBlogWebAPI.Migrations
                     b.ToTable("ProductStocks");
                 });
 
+            modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.ProductUserInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductUserInfos");
+                });
+
             modelBuilder.Entity("BungieCordBlogWebAPI.Models.Domain.Sidekick", b =>
                 {
                     b.Property<Guid>("Id")

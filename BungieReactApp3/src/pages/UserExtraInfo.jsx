@@ -169,9 +169,9 @@ export default function UserExtraInfo() {
               <Card.Text>
                 Manage user extra info below. You can create, edit, and delete records.
               </Card.Text>
-              <Button variant="primary" onClick={() => openModal('create')}>
+              {/* <Button variant="primary" onClick={() => openModal('create')}>
                 Add User Extra Info
-              </Button>
+              </Button> */}
             </Card.Body>
           </Card>
           {error && <div className="alert alert-danger">{error}</div>}
@@ -184,11 +184,11 @@ export default function UserExtraInfo() {
                   <th>Email</th>
                   <th>Full Name</th>
                   <th>Phone Number</th>
-                  <th>Role</th>
+                  {/* <th>Role</th> */}
                   <th>Address</th>
                   <th>Registered Date</th>
                   <th>Active</th>
-                  <th>Profile Image</th>
+                  {/* <th>Profile Image</th> */}
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -198,17 +198,17 @@ export default function UserExtraInfo() {
                     <td>{user.email}</td>
                     <td>{user.fullName}</td>
                     <td>{user.phoneNumber}</td>
-                    <td>{user.role}</td>
+                    {/* <td>{user.role}</td> */}
                     <td>{user.address}</td>
                     <td>{user.registeredDate?.replace('T', ' ').slice(0, 19)}</td>
                     <td>{user.isActive ? 'Yes' : 'No'}</td>
-                    <td>
+                    {/* <td>
                       {user.profileImageUrl ? (
                         <Image src={user.profileImageUrl} alt="Profile" rounded width={40} height={40} />
                       ) : (
                         <span>No Image</span>
                       )}
-                    </td>
+                    </td> */}
                     <td>
                       <Button
                         variant="outline-secondary"

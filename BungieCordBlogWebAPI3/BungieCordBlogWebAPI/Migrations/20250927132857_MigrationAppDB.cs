@@ -91,6 +91,23 @@ namespace BungieCordBlogWebAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductUserInfos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductUserInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SuperHeroes",
                 columns: table => new
                 {
@@ -405,6 +422,9 @@ namespace BungieCordBlogWebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductStocks");
+
+            migrationBuilder.DropTable(
+                name: "ProductUserInfos");
 
             migrationBuilder.DropTable(
                 name: "SidekickComicAppearances");

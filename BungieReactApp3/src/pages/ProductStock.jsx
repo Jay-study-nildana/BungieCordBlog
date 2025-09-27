@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Table, Button, Form, Modal, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Table, Button, Form, Modal, Spinner, Alert, ButtonGroup } from 'react-bootstrap';
 
 const API_BASE = 'https://localhost:7226/api/ProductStock';
 const SUPERHERO_API = 'https://localhost:7226/api/SuperHeroes';
@@ -25,6 +25,15 @@ export default function ProductStock() {
   const [superHeroes, setSuperHeroes] = useState([]);
   const [superHeroesLoading, setSuperHeroesLoading] = useState(false);
   const [superHeroesError, setSuperHeroesError] = useState('');
+  const [actionLoading, setActionLoading] = useState({}); // Track loading for row actions
+
+  // Modal state for increase/decrease amount
+  const [amountModal, setAmountModal] = useState({
+    show: false,
+    id: '',
+    action: '',
+    amount: 1,
+  });
 
   // Fetch all product stocks
   const fetchStocks = async () => {
@@ -175,6 +184,69 @@ export default function ProductStock() {
     }
   };
 
+  // PATCH endpoints for increase, decrease, enable, disable
+  const handlePatchAction = async (id, action, amount = null) => {
+    setActionLoading((prev) => ({ ...prev, [id]: true }));
+    setError('');
+    let url = `${API_BASE}/${id}/${action}`;
+    if (amount !== null) url += `?amount=${amount}`;
+    try {
+      const res = await fetch(url, {
+        method: 'PATCH',
+        headers: { 'accept': '*/*' },
+      });
+      if (!res.ok) throw new Error(`Failed to ${action}`);
+      const data = await res.json();
+      setNotification({
+        show: true,
+        message:
+          action === 'increase'
+            ? `Quantity increased by ${amount}`
+            : action === 'decrease'
+            ? `Quantity decreased by ${amount}`
+            : action === 'enable'
+            ? 'Product stock enabled'
+            : action === 'disable'
+            ? 'Product stock disabled'
+            : 'Action successful',
+        variant: 'success',
+      });
+      fetchStocks();
+      setTimeout(() => setNotification({ show: false, message: '', variant: 'success' }), 3000);
+    } catch (err) {
+      setError(`Error performing ${action} action`);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [id]: false }));
+    }
+  };
+
+  // Open modal for amount input
+  const openAmountModal = (id, action) => {
+    setAmountModal({ show: true, id, action, amount: 1 });
+  };
+
+  // Handle amount change in modal
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmountModal((prev) => ({
+      ...prev,
+      amount: value.replace(/[^0-9]/g, ''),
+    }));
+  };
+
+  // Submit amount modal
+  const submitAmountModal = async () => {
+    const amount = Number(amountModal.amount);
+    if (!amount || isNaN(amount) || amount <= 0) return;
+    await handlePatchAction(amountModal.id, amountModal.action, amount);
+    setAmountModal({ show: false, id: '', action: '', amount: 1 });
+  };
+
+  // Close amount modal
+  const closeAmountModal = () => {
+    setAmountModal({ show: false, id: '', action: '', amount: 1 });
+  };
+
   return (
     <Container className="mt-4">
       <Row className="justify-content-center">
@@ -204,7 +276,7 @@ export default function ProductStock() {
             <Card.Body>
               <Card.Title as="h2" className="mb-3">Product Stock</Card.Title>
               <Card.Text>
-                Manage your product stock below. You can add, edit, or delete stock items.
+                Manage your product stock below. You can add, edit, delete, increase, decrease, enable, or disable stock items.
               </Card.Text>
               <Button variant="primary" onClick={openModal}>
                 Add Product Stock
@@ -243,21 +315,51 @@ export default function ProductStock() {
                       <td>{stock.isActive ? 'Yes' : 'No'}</td>
                       <td>{stock.lastUpdated?.replace('T', ' ').slice(0, 19)}</td>
                       <td>
-                        <Button
-                          variant="warning"
-                          size="sm"
-                          className="me-2"
-                          onClick={() => openEditModal(stock)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleDelete(stock.id)}
-                        >
-                          Delete
-                        </Button>
+                        <ButtonGroup size="sm">
+                          <Button
+                            variant="warning"
+                            onClick={() => openEditModal(stock)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDelete(stock.id)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="success"
+                            disabled={actionLoading[stock.id]}
+                            onClick={() => openAmountModal(stock.id, 'increase')}
+                          >
+                            {actionLoading[stock.id] ? '...' : 'Increase'}
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            disabled={actionLoading[stock.id]}
+                            onClick={() => openAmountModal(stock.id, 'decrease')}
+                          >
+                            {actionLoading[stock.id] ? '...' : 'Decrease'}
+                          </Button>
+                          {stock.isActive ? (
+                            <Button
+                              variant="outline-dark"
+                              disabled={actionLoading[stock.id]}
+                              onClick={() => handlePatchAction(stock.id, 'disable')}
+                            >
+                              {actionLoading[stock.id] ? '...' : 'Disable'}
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline-success"
+                              disabled={actionLoading[stock.id]}
+                              onClick={() => handlePatchAction(stock.id, 'enable')}
+                            >
+                              {actionLoading[stock.id] ? '...' : 'Enable'}
+                            </Button>
+                          )}
+                        </ButtonGroup>
                       </td>
                     </tr>
                   );
@@ -366,6 +468,45 @@ export default function ProductStock() {
                 </Button>
               </Modal.Footer>
             </Form>
+          </Modal>
+
+          {/* Modal for Increase/Decrease Amount */}
+          <Modal show={amountModal.show} onHide={closeAmountModal} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                {amountModal.action === 'increase' ? 'Increase Quantity' : 'Decrease Quantity'}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group>
+                <Form.Label>
+                  {amountModal.action === 'increase'
+                    ? 'Enter amount to increase:'
+                    : 'Enter amount to decrease:'}
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  min={1}
+                  value={amountModal.amount}
+                  onChange={handleAmountChange}
+                  autoFocus
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={closeAmountModal}>
+                Cancel
+              </Button>
+              <Button
+                variant={amountModal.action === 'increase' ? 'success' : 'secondary'}
+                onClick={submitAmountModal}
+                disabled={actionLoading[amountModal.id]}
+              >
+                {actionLoading[amountModal.id]
+                  ? (amountModal.action === 'increase' ? 'Increasing...' : 'Decreasing...')
+                  : (amountModal.action === 'increase' ? 'Increase' : 'Decrease')}
+              </Button>
+            </Modal.Footer>
           </Modal>
         </Col>
       </Row>

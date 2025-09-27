@@ -138,17 +138,34 @@ public class ProductStockController : ControllerBase
         ProductStockDto dto;
         if (product == null)
         {
-            dto = new ProductStockDto
+            // Create a new ProductStock entity with default values
+            var newProduct = new ProductStock
             {
-                Id = Guid.Empty,
                 SuperHeroId = superHeroId,
                 UnitPrice = 0,
                 Quantity = 0,
-                SKU = "N/A",
-                Description = "No product found for this superhero.",
-                Currency = "N/A",
+                SKU = "Please update SKU",
+                Description = "No product found for this superhero. Add a description",
+                Currency = "Update Currency",
                 IsActive = false,
-                LastUpdated = DateTime.MinValue
+                LastUpdated = DateTime.UtcNow
+            };
+
+            // Add the new product to the database
+            var createdProduct = await repository.AddAsync(newProduct);
+
+            // Map to DTO
+            dto = new ProductStockDto
+            {
+                Id = createdProduct.Id,
+                SuperHeroId = createdProduct.SuperHeroId,
+                UnitPrice = createdProduct.UnitPrice,
+                Quantity = createdProduct.Quantity,
+                SKU = createdProduct.SKU,
+                Description = createdProduct.Description,
+                Currency = createdProduct.Currency,
+                IsActive = createdProduct.IsActive,
+                LastUpdated = createdProduct.LastUpdated
             };
         }
         else
@@ -167,6 +184,94 @@ public class ProductStockController : ControllerBase
             };
         }
 
+        return Ok(dto);
+    }
+
+    // PATCH: api/productstock/{id}/increase
+    [HttpPatch("{id:guid}/increase")]
+    public async Task<IActionResult> IncreaseStock(Guid id, [FromQuery] int amount)
+    {
+        var updated = await repository.IncreaseStockAsync(id, amount);
+        if (updated == null) return BadRequest("Invalid product or amount.");
+
+        var dto = new ProductStockDto
+        {
+            Id = updated.Id,
+            SuperHeroId = updated.SuperHeroId,
+            UnitPrice = updated.UnitPrice,
+            Quantity = updated.Quantity,
+            SKU = updated.SKU,
+            Description = updated.Description,
+            Currency = updated.Currency,
+            IsActive = updated.IsActive,
+            LastUpdated = updated.LastUpdated
+        };
+        return Ok(dto);
+    }
+
+    // PATCH: api/productstock/{id}/decrease
+    [HttpPatch("{id:guid}/decrease")]
+    public async Task<IActionResult> DecreaseStock(Guid id, [FromQuery] int amount)
+    {
+        var updated = await repository.DecreaseStockAsync(id, amount);
+        if (updated == null) return BadRequest("Invalid product, amount, or insufficient stock.");
+
+        var dto = new ProductStockDto
+        {
+            Id = updated.Id,
+            SuperHeroId = updated.SuperHeroId,
+            UnitPrice = updated.UnitPrice,
+            Quantity = updated.Quantity,
+            SKU = updated.SKU,
+            Description = updated.Description,
+            Currency = updated.Currency,
+            IsActive = updated.IsActive,
+            LastUpdated = updated.LastUpdated
+        };
+        return Ok(dto);
+    }
+
+    // PATCH: api/productstock/{id}/disable
+    [HttpPatch("{id:guid}/disable")]
+    public async Task<IActionResult> DisableProduct(Guid id)
+    {
+        var updated = await repository.DisableProductAsync(id);
+        if (updated == null) return NotFound();
+
+        var dto = new ProductStockDto
+        {
+            Id = updated.Id,
+            SuperHeroId = updated.SuperHeroId,
+            UnitPrice = updated.UnitPrice,
+            Quantity = updated.Quantity,
+            SKU = updated.SKU,
+            Description = updated.Description,
+            Currency = updated.Currency,
+            IsActive = updated.IsActive,
+            LastUpdated = updated.LastUpdated
+        };
+        return Ok(dto);
+    }
+
+    // PATCH: api/productstock/{id}/enable
+    [HttpPatch("{id:guid}/enable")]
+    public async Task<IActionResult> EnableProduct(Guid id)
+    {
+        var updated = await repository.EnableProductAsync(id);
+        if (updated == null) return NotFound();
+
+        var dto = new ProductStockDto
+        {
+            Id = updated.Id,
+            SuperHeroId = updated.SuperHeroId,
+            UnitPrice = updated.UnitPrice,
+            Quantity = updated.Quantity,
+            SKU = updated.SKU,
+            Description = updated.Description,
+            Currency = updated.Currency,
+            IsActive = updated.IsActive,
+            LastUpdated = updated.LastUpdated
+        };
         return Ok(dto);
     }
 }

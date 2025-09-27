@@ -37,6 +37,9 @@ import ProductStock from "./pages/ProductStock";
 import AllOrders from "./pages/AllOrders";
 import UserExtraInfo from "./pages/UserExtraInfo";
 import AdvancedUserManagement from "./pages/AdvancedUserManagement";
+import ProductUserTable from "./pages/ProductUserTable.jsx";
+import WriterPanel from "./pages/WriterPanel";
+import WriterPanelStock from "./pages/WriterPanelStock";
 
 // Wrapper to pass superHeroId from URL params
 function SuperHeroCardWrapper() {
@@ -102,6 +105,10 @@ export default function App() {
               path="/advanced-user-management"
               element={<AdvancedUserManagement />}
             />
+            <Route path="/product-user-table" element={<ProductUserTable />} />
+            <Route path="/writer-panel" element={<WriterPanel />} />
+
+            <Route path="/writer-panel-stock" element={<WriterPanelStock />} />
           </Routes>
         </main>
         <Footer />
