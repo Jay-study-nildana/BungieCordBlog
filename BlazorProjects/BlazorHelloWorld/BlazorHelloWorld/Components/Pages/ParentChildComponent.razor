@@ -1,0 +1,20 @@
+﻿@page "/parentchildcomponent"
+@rendermode InteractiveServer
+
+<h3>ParentChildComponent</h3>
+
+<div>
+    <p>Message from Child: @parentMessage</p>
+    <ChildComponent Message="Hello from Parent Component!" OnMessageChanged="HandleMessageChanged" />
+    <ChildComponent Message="Another message from Parent Component!" OnMessageChanged="HandleMessageChanged" />
+</div>
+
+@code {
+    private string parentMessage;
+
+    private void HandleMessageChanged(string message)
+    {
+        parentMessage = message;
+    }
+}
+

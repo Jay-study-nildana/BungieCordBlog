@@ -1,0 +1,6 @@
+@TravelBookingNotificationsBackend_HostAddress = http://localhost:5188
+
+GET {{TravelBookingNotificationsBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

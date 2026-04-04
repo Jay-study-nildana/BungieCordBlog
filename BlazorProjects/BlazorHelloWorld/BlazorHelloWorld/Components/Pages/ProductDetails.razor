@@ -1,0 +1,16 @@
+﻿@page "/product/{productId:int?}"
+
+<h3>Product Details</h3>
+@if (productId.HasValue)
+{
+    <p>Product ID: @productId</p>
+}
+else
+{
+    <p>No Product ID provided.</p>
+}
+
+@code {
+    [Parameter]
+    public int? productId { get; set; }
+}

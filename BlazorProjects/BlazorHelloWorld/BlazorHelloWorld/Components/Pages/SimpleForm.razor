@@ -1,0 +1,80 @@
+﻿@page "/simpleform"
+@using BlazorHelloWorld.Models
+@using BlazorHelloWorld.Services
+@inject HeroService HeroService
+
+<h3>Super Hero Form</h3>
+
+<EditForm Model="@newHero" OnValidSubmit="@HandleValidSubmit" FormName="SuperHeroForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="newHero.Name" />
+    </div>
+    <div class="form-group">
+        <label for="alias">Alias</label>
+        <InputText id="alias" class="form-control" @bind-Value="newHero.Alias" />
+    </div>
+    <div class="form-group">
+        <label for="superPower">Super Power</label>
+        <InputText id="superPower" class="form-control" @bind-Value="newHero.SuperPower" />
+    </div>
+    <div class="form-group">
+        <label for="team">Team</label>
+        <InputText id="team" class="form-control" @bind-Value="newHero.Team" />
+    </div>
+    <div class="form-group">
+        <label for="origin">Origin</label>
+        <InputText id="origin" class="form-control" @bind-Value="newHero.Origin" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Super Hero</button>
+</EditForm>
+
+@if (HeroService.GetHeroes().Count > 0)
+{
+    <h3>Super Heroes</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Alias</th>
+                <th>Super Power</th>
+                <th>Team</th>
+                <th>Origin</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var hero in HeroService.GetHeroes())
+            {
+                <tr>
+                    <td>@hero.Name</td>
+                    <td>@hero.Alias</td>
+                    <td>@hero.SuperPower</td>
+                    <td>@hero.Team</td>
+                    <td>@hero.Origin</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    // [SupplyParameterFromForm(FormName = "ProductCreate")]
+    // public Product Product { get; set; } = new Product() { };
+
+    [SupplyParameterFromForm(FormName = "SuperHeroForm")]
+    public SuperHero newHero { get; set; }  = new SuperHero() { };
+    // private List<SuperHero> heroes = new List<SuperHero>();
+
+    private void HandleValidSubmit()
+    {
+        HeroService.AddHero(newHero);
+        newHero = new SuperHero(); // Reset the form
+    }
+
+
+}

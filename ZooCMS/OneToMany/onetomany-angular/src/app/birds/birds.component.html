@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <h2>Birds Management</h2>
+
+  <form class="row g-3 mb-4" (ngSubmit)="createBird()">
+    <div class="col-md-5">
+      <input type="text" class="form-control" placeholder="Bird Name" [(ngModel)]="birdName" name="birdName" required>
+    </div>
+    <div class="col-md-5">
+      <select class="form-select" [(ngModel)]="selectedZooId" name="selectedZooId" required>
+        <option [ngValue]="null" disabled selected>Select Zoo</option>
+        <option *ngFor="let zoo of zoos" [ngValue]="zoo.id">{{ zoo.nameOfZoo }} ({{ zoo.locationOfZoo }})</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-success w-100" type="submit" [disabled]="loading">Create Bird</button>
+    </div>
+  </form>
+
+  <button class="btn btn-primary mb-3" (click)="getBirds()" [disabled]="loading">
+    Load Birds
+    <span *ngIf="loading" class="spinner-border spinner-border-sm ms-2"></span>
+  </button>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="birds.length" class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Bird Name</th>
+        <th>Zoo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bird of birds">
+        <td>{{ bird.id }}</td>
+        <td>{{ bird.birdName }}</td>
+        <td>{{ getZooName(bird.zooId) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

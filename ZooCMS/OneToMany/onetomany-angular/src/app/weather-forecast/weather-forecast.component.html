@@ -1,0 +1,52 @@
+<div class="container mt-4">
+  <h2>Weather Forecast</h2>
+  <button class="btn btn-primary mb-3" (click)="loadForecast()" [disabled]="loading">
+    Reload
+    <span *ngIf="loading" class="spinner-border spinner-border-sm ms-2"></span>
+  </button>
+
+  <div *ngIf="loading && !error" class="mb-3">
+    <span class="spinner-border spinner-border-sm"></span> Loading...
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="forecasts.length && !loading" class="table table-striped">
+    <thead>
+        <p>Click on the column headers to sort the table</p>
+      <tr>
+        <th (click)="sortTable('date')" style="cursor:pointer">
+          Date
+          <span *ngIf="sortColumn === 'date'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th (click)="sortTable('temperatureC')" style="cursor:pointer">
+          Temp (°C)
+          <span *ngIf="sortColumn === 'temperatureC'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th (click)="sortTable('temperatureF')" style="cursor:pointer">
+          Temp (°F)
+          <span *ngIf="sortColumn === 'temperatureF'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th (click)="sortTable('summary')" style="cursor:pointer">
+          Summary
+          <span *ngIf="sortColumn === 'summary'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let forecast of forecasts">
+        <td>{{ forecast.date | date:'mediumDate' }}</td>
+        <td>{{ forecast.temperatureC }}</td>
+        <td>{{ forecast.temperatureF }}</td>
+        <td>{{ forecast.summary }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

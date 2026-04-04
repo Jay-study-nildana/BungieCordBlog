@@ -1,0 +1,15 @@
+﻿@page "/navigate"
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<h3>Navigate</h3>
+<button class="btn btn-primary" @onclick="NavigateToHome">Go to Home</button>
+<p>Expect an Exception to be thrown when you try to navigate.</p>
+<p>However, navigation will complete just fine. just continue after the exception.</p>
+
+@code {
+    private void NavigateToHome()
+    {
+        Navigation.NavigateTo("/home");
+    }
+}

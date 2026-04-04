@@ -1,0 +1,89 @@
+﻿@page "/lifecycle"
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<h3>Blazor Lifecycle Demo</h3>
+
+<p>Current Time: @currentTime</p>
+<p>Parameter Value: @ParameterValue</p>
+<p>Render Count: @renderCount</p>
+
+<button @onclick="NavigateHome">Navigate Home</button>
+
+@code {
+    private string currentTime;
+    private int renderCount = 0;
+
+    [Parameter]
+    public string ParameterValue { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Synchronous initialization logic
+        currentTime = DateTime.Now.ToString("HH:mm:ss");
+        Console.WriteLine("OnInitialized called");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Asynchronous initialization logic
+        await Task.Delay(1000); // Simulate async work
+        currentTime = DateTime.Now.ToString("HH:mm:ss");
+        Console.WriteLine("OnInitializedAsync called");
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Synchronous parameter handling logic
+        Console.WriteLine($"OnParametersSet called with ParameterValue: {ParameterValue}");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Asynchronous parameter handling logic
+        await Task.Delay(500); // Simulate async work
+        Console.WriteLine($"OnParametersSetAsync called with ParameterValue: {ParameterValue}");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // Logic to run after the component has rendered
+        renderCount++;
+        Console.WriteLine($"OnAfterRender called. First render: {firstRender}");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Asynchronous logic to run after the component has rendered
+        if (firstRender)
+        {
+            await Task.Delay(500); // Simulate async work
+            Console.WriteLine("OnAfterRenderAsync called for the first render");
+        }
+    }
+
+    protected override bool ShouldRender()
+    {
+        // Logic to determine if the component should render
+        Console.WriteLine("ShouldRender called");
+        return true; // Return true to allow rendering
+    }
+
+    public void Dispose()
+    {
+        // Cleanup logic
+        Console.WriteLine("Dispose called");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        // Asynchronous cleanup logic
+        await Task.Delay(500); // Simulate async cleanup work
+        Console.WriteLine("DisposeAsync called");
+    }
+
+    private void NavigateHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
