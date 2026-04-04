@@ -1,0 +1,53 @@
+﻿@page "/fetchdatawithbutton"
+@rendermode InteractiveServer
+@using BlazorHelloWorld.Services
+@using BlazorHelloWorld.Models
+@inject NasaApodService NasaApodService
+
+<PageTitle>NASA APOD with button</PageTitle>
+
+<button class="btn btn-primary" @onclick="CallAPOD">Click me for APOD via InteractiveServer</button>
+
+@if (loading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (apodResponse != null)
+{
+    <div>
+        <h4>@apodResponse.Title</h4>
+        <p>@apodResponse.Date</p>
+        <img src="@apodResponse.Url" alt="@apodResponse.Title" />
+        <p>@apodResponse.Explanation</p>
+        <p><strong>Copyright:</strong> @apodResponse.Copyright</p>
+    </div>
+}
+
+@code {
+    private int currentCount = 0;
+    private NasaApodResponse apodResponse;
+    private bool loading;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private async Task CallAPOD()
+    {
+        try
+        {
+            loading = true;
+            apodResponse = await NasaApodService.GetApodAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading APOD: {ex.Message}");
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,6 @@
+@OneToMany_HostAddress = http://localhost:5242
+
+GET {{OneToMany_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

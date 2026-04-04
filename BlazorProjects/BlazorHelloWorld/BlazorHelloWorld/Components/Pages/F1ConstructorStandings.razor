@@ -1,0 +1,65 @@
+﻿@page "/f1constructorstandings"
+@attribute [StreamRendering]
+
+<PageTitle>Constructor Standings</PageTitle>
+
+<h1>Constructor Standings</h1>
+
+<p>This component demonstrates showing data via StreamRendering.</p>
+
+@if (standings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Constructor</th>
+                <th>Points</th>
+                <th>Wins</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var standing in standings)
+            {
+                <tr>
+                    <td>@standing.Position</td>
+                    <td>@standing.ConstructorName</td>
+                    <td>@standing.Points</td>
+                    <td>@standing.Wins</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ConstructorStanding[]? standings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        standings = new[]
+        {
+            new ConstructorStanding { Position = 1, ConstructorName = "Red Bull Racing", Points = 500, Wins = 10 },
+            new ConstructorStanding { Position = 2, ConstructorName = "Mercedes", Points = 450, Wins = 8 },
+            new ConstructorStanding { Position = 3, ConstructorName = "Ferrari", Points = 400, Wins = 6 },
+            new ConstructorStanding { Position = 4, ConstructorName = "McLaren", Points = 350, Wins = 4 },
+            new ConstructorStanding { Position = 5, ConstructorName = "Alpine", Points = 300, Wins = 2 }
+        };
+    }
+
+    public class ConstructorStanding
+    {
+        public int Position { get; set; }
+        public string ConstructorName { get; set; }
+        public int Points { get; set; }
+        public int Wins { get; set; }
+    }
+
+}

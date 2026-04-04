@@ -1,0 +1,22 @@
+﻿@code {
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnMessageChanged { get; set; }
+
+    private string childMessage;
+
+    private void UpdateMessage()
+    {
+        Console.WriteLine("UpdateMessage in Child Clicked");
+        childMessage = "Message from Child Component!";
+        OnMessageChanged.InvokeAsync(childMessage);
+    }
+}
+
+<div>
+    <p>Message from Parent: @Message</p>
+    <button class="btn btn-primary" @onclick="UpdateMessage">Send Message to Parent</button>
+</div>
+

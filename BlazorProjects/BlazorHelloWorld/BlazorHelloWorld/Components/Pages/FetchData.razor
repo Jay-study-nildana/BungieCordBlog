@@ -1,0 +1,30 @@
+﻿@page "/fetchdata"
+@using BlazorHelloWorld.Services
+@using BlazorHelloWorld.Models
+@inject NasaApodService NasaApodService
+
+<h3>NASA Astronomy Picture of the Day</h3>
+
+@if (apodResponse == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        <h4>@apodResponse.Title</h4>
+        <p>@apodResponse.Date</p>
+        <img src="@apodResponse.Url" alt="@apodResponse.Title" />
+        <p>@apodResponse.Explanation</p>
+        <p><strong>Copyright:</strong> @apodResponse.Copyright</p>
+    </div>
+}
+
+@code {
+    private NasaApodResponse apodResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        apodResponse = await NasaApodService.GetApodAsync();
+    }
+}

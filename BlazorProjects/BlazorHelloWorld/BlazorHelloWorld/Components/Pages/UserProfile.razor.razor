@@ -1,0 +1,9 @@
+﻿@page "/user/{userId:int}"
+
+<h3>User Profile</h3>
+<p>User ID: @userId</p>
+
+@code {
+    [Parameter]
+    public int userId { get; set; }
+}

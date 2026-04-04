@@ -1,0 +1,38 @@
+.custom-navbar {
+  background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+}
+
+.custom-footer {
+  background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 900px; /* or any value you prefer */
+  margin: 0 auto;
+  flex: 1;
+  min-height: 70vh; /* helps with sticky footer */
+  box-sizing: border-box;
+}
+
+footer {
+  /* Your existing footer styles */
+  width: 100%;
+  bottom: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}

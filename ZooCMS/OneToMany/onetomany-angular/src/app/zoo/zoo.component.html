@@ -1,0 +1,50 @@
+<div class="container mt-4">
+  <h2>Zoo Management</h2>
+
+  <form class="row g-3 mb-4" (ngSubmit)="createZoo()">
+    <div class="col-md-5">
+      <input type="text" class="form-control" placeholder="Zoo Name" [(ngModel)]="nameOfZoo" name="nameOfZoo" required>
+    </div>
+    <div class="col-md-5">
+      <input type="text" class="form-control" placeholder="Location" [(ngModel)]="locationOfZoo" name="locationOfZoo" required>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-success w-100" type="submit" [disabled]="loading">Create Zoo</button>
+    </div>
+  </form>
+
+  <button class="btn btn-primary mb-3" (click)="getZoos(); getBirds()" [disabled]="loading">
+    Load Zoos & Birds
+    <span *ngIf="loading" class="spinner-border spinner-border-sm ms-2"></span>
+  </button>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="zoos.length" class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Birds</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let zoo of zoos">
+        <td>{{ zoo.id }}</td>
+        <td>{{ zoo.nameOfZoo }}</td>
+        <td>{{ zoo.locationOfZoo }}</td>
+        <td>
+          <ul *ngIf="getBirdsForZoo(zoo.id).length; else noBirds">
+            <li *ngFor="let bird of getBirdsForZoo(zoo.id)">
+              {{ bird.birdName }}
+            </li>
+          </ul>
+          <ng-template #noBirds>
+            <span>No birds</span>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,11 @@
+<div class="notifications-container">
+  <h2>Notifications</h2>
+  <ul class="notification-list">
+    <li *ngFor="let notification of notifications">
+      <div class="notification-box">
+        <p>{{ notification.message }}</p>
+        <small class="timestamp">{{ notification.timestamp | date: 'short' }}</small>
+      </div>
+    </li>
+  </ul>
+</div>
